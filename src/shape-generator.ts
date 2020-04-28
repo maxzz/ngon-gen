@@ -44,7 +44,7 @@ export function generate(p: types.ShapeParams) {
     // generate line
     let d = `M${points[0][0]},${points[0][1]}` + points.map((_, index) => {
         return !index ? '' : `L${_[0]},${_[1]}`;
-    }) + `L${points[0][0]},${points[0][1]}`;
+    }) + `z`;
 
     return {
         d,
