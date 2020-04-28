@@ -1,30 +1,40 @@
 <template>
     <div id="app">
         <div class="main">
-            <svg viewBox="0 0 14 14" width="100%">
-                <path
-                    :d="data.d"
-                ></path>
-                <circle :cx="data.cx" :cy="data.cy" r=".3px" fill=none stroke="green" stroke-width=".1"></circle>
+            <svg viewBox="0 0 14 14" class="big-canvas">
+                <path :d="data.d" />
+                <circle class="origin" :cx="data.cx" :cy="data.cy" r=".3px"></circle>
             </svg>
             <div class="right">
-                <div class="input-group"> <label><input type="range" v-model="sp.lenInner.x" min="2" max="20"><span class="val">{{sp.lenInner.x}}:</span>Inner len x</label> </div>
-                <div class="input-group"> <label><input type="range" v-model="sp.lenInner.y" min="2" max="20"><span class="val">{{sp.lenInner.y}}:</span>Inner len y</label> </div>
-                <hr>
-                <div class="input-group"> <label><input type="range" v-model="sp.lenOuter.x" min=".2" max="20"><span class="val">{{sp.lenOuter.x}}:</span>Outer len x</label> </div>
-                <div class="input-group"> <label><input type="range" v-model="sp.lenOuter.y" min=".2" max="20"><span class="val">{{sp.lenOuter.y}}:</span>Outer len y</label> </div>
-                <hr>
-                <div class="input-group"> <label><input type="range" v-model="sp.offset.x" min="2" max="20"><span class="val">{{sp.offset.x}}:</span>Offser x</label> </div>
-                <div class="input-group"> <label><input type="range" v-model="sp.offset.y" min="2" max="20"><span class="val">{{sp.offset.y}}:</span>Offser y</label> </div>
-                <hr>
-                <div class="input-group"> <label><input type="range" v-model="sp.nOuter" min="2" max="40"><span class="val">{{sp.nOuter}}:</span># outer</label> </div>
-                <div class="input-group"> <label><input type="range" v-model="sp.nInner" min="1" max="30"><span class="val">{{sp.nInner}}:</span> # inner</label> </div>
-
-                <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" att="44" />
+                <div class="ranges">
+                    <InputRange label="# outer" v-model="sp.nOuter" min="2" max="70" />
+                    <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
+    
+                    <InputRange label="Outer len x" v-model="sp.lenOuter.x" min=".2" max="20" />
+                    <InputRange label="Outer len y" v-model="sp.lenOuter.y" min=".2" max="20" />
+    
+                    <InputRange label="Inner len x" v-model="sp.lenInner.x" min=".2" max="20" />
+                    <InputRange label="Inner len y" v-model="sp.lenInner.y" min=".2" max="20" />
+    
+                    <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" />
+                    <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
+                </div>
+                <div class="actions">
+                    <input @click="actionSave" type="button" value="Save">
+                </div>
             </div>
         </div>
         <div class="output">
-            <textarea cols="30" rows="10" :value="data.d"></textarea>
+            <textarea cols="30" rows="10" :value='`<svg viewBox="0 0 14 14">\n    <path d="${data.d}"/>\n</svg>`'></textarea>
+        </div>
+        <div>
+            <div v-for="(shape, index) of shapes" :key=index @click="applyShape(shape)">
+                <svg viewBox="0 0 14 14" class="small-canvas">
+                    <path :d="generate(shape).d" />
+                    <circle class="origin" :cx="data.cx" :cy="data.cy" r=".3px"></circle>
+                </svg>
+
+            </div>
         </div>
     </div>
 </template>
@@ -40,25 +50,61 @@ export default Vue.extend({
     name: "App",
     components: { InputRange },
     setup() {
-        let msg = ref('aa');
-
-        const shapeParams: types.ShapeParams = {
-            lenOuter: { x: 5, y: 5 },
-            lenInner: { x: 2.2, y: 2.2 },
-            offset: { x: 7, y: 7 },
+        const initialParams: types.ShapeParams = {
             nOuter: 5,
-            nInner: 5,
+            nInner: 2,
+            lenOuter: { x: 2.2, y: 2.2 },
+            lenInner: { x: 5.2, y: 5.2 },
+            offset: { x: 7, y: 7 },
         };
 
-        const sp = reactive(shapeParams);
+        let sp = reactive(initialParams);
 
         let data = computed(() => {
             return generate(sp);
         });
 
+        function actionSave() {
+            shapes.value.push(JSON.parse(JSON.stringify(sp)));
+        }
+
+        function applyShape(shape: types.ShapeParams) {
+            console.log('shape', shape);
+            //sp = reactive({...shape});
+            //sp = reactive(JSON.parse(JSON.stringify(shape)));
+            sp.nOuter= shape.nOuter;
+            sp.nInner= shape.nInner;
+            sp.lenOuter = shape.lenOuter;
+            sp.lenInner = shape.lenInner;
+            sp.offset= shape.offset;
+        }
+
+        //[{"nOuter":3,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},{"nOuter":4,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}]
+
+        let shapes = ref<types.ShapeParams[]>([]);
+
+        shapes.value.push({
+            nOuter: 3,
+            nInner: 2,
+            lenOuter: { x: 2.2, y: 2.2 },
+            lenInner: { x: 5.2, y: 5.2 },
+            offset: { x: 7, y: 7 },
+        },
+        {
+            nOuter: 4,
+            nInner: 2,
+            lenOuter: { x: 2.2, y: 2.2 },
+            lenInner: { x: 5.2, y: 5.2 },
+            offset: { x: 7, y: 7 },
+        });
+
         return {
             sp,
             data,
+            actionSave,
+            applyShape,
+            generate,
+            shapes
         };
     }
 });
@@ -69,35 +115,74 @@ body {
     margin: 0;
     box-sizing: border-box;
     font-family: Avenir, Helvetica, Arial, sans-serif;
+    background-color: rgb(235, 235, 235);
 }
 
 #app {
-    margin: 0 auto;
-    max-width: 80vw;
+    margin: 1em auto;
+    max-width: 90vw;
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr auto;
+    row-gap: .4em;
+
+    background-color: #fff;
+    // border: 1px solid rgb(243, 243, 243);
+    // border-radius: 5px;
+    padding: .4em;
+    box-shadow: 1px 1px 1px #999;
 }
 
 .main {
-    background-color: hsl(144, 19%, 10%);
     color: white;
     display: grid;
+    column-gap: .4em;
     grid-template-columns: auto 1fr;
 }
 
+.right {
+    background-color: hsl(261, 100%, 10%);
+    padding: .4em;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
 svg {
-    fill: none;
-    stroke: aqua;
-    background-color: rgba(255, 0, 0, 0.2);
+    width: 100%;
+    background-color: hsl(208, 100%, 95%);
+    border: 1px solid rgb(243, 243, 243);
+
+    path {
+        fill: none;
+        stroke: rgb(7, 85, 105);
+        stroke-width: .2;
+    }
+
+    .origin {
+        fill: none;
+        stroke: rgba(255, 0, 0, 0.438);
+        stroke-width: .1;
+    }
+}
+
+.small-canvas {
+    width: 64px;
+    .origin {
+        display: none;
+    }
 }
 
 .output textarea {
     width: 100%;
     padding: 0;
-    background-color: hsla(96, 100%, 74%, 0.28);
+    background-color: hsl(0, 0%, 99%);
 
     border: none;
-    border-radius: 5px;
-    box-shadow: 1px 1px 1px #999;
+    font-size: .9em;
 }
 </style>
