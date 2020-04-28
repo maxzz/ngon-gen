@@ -1,8 +1,6 @@
 <template>
     <div>
         <label>
-            <div>{{value}}:</div>
-            <div>{{label}}</div>
             <input
                 class="uk-range"
                 type="range"
@@ -10,6 +8,8 @@
                 v-bind:value="value"
                 v-on:input="$emit('input', $event.target.value)"
             />
+            <div>{{value}}:</div>
+            <div>{{label}}</div>
         </label>
         <!-- {{printText()}} -->
     </div>
@@ -30,13 +30,19 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../scss/variables.scss';
+@import '../scss/tm-theme.scss';
+@import '../scss/variables-theme.scss';
+@import '../scss/mixins-theme.scss';
+@import '../scss/form-range.scss';
+
 label {
     display: flex;
     align-items: center;
 }
 
-.uk-range {
+/* .uk-range {
     box-sizing: border-box;
     margin: 0;
     vertical-align: middle;
@@ -138,6 +144,6 @@ label {
 
 .uk-range:focus::-ms-fill-lower,.uk-range:focus::-ms-fill-upper {
     background: #d2d2d2
-}
+} */
 
 </style>

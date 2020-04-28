@@ -79,7 +79,8 @@ body {
 }
 
 .main {
-    background-color: hsla(146, 50%, 36%, 0.2);
+    background-color: hsl(144, 19%, 10%);
+    color: white;
     display: grid;
     grid-template-columns: auto 1fr;
 }
