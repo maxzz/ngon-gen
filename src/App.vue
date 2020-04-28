@@ -20,7 +20,7 @@
                 <div class="input-group"> <label><input type="range" v-model="sp.nOuter" min="2" max="40"><span class="val">{{sp.nOuter}}:</span># outer</label> </div>
                 <div class="input-group"> <label><input type="range" v-model="sp.nInner" min="1" max="30"><span class="val">{{sp.nInner}}:</span> # inner</label> </div>
 
-                <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" att="44" :style2="{color: 'red'}" />
+                <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" att="44" />
             </div>
         </div>
         <div class="output">
