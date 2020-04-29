@@ -10,14 +10,23 @@
                     <InputRange label="# outer" v-model="sp.nOuter" min="2" max="70" />
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
     
-                    <InputRange label="Outer len x" v-model="sp.lenOuter.x" min=".2" max="20" />
-                    <InputRange label="Outer len y" v-model="sp.lenOuter.y" min=".2" max="20" />
+                    <div class="range2">
+                        <LockButton />
+                        <InputRange label="Outer len x" v-model="sp.lenOuter.x" min=".2" max="20" />
+                        <InputRange label="Outer len y" v-model="sp.lenOuter.y" min=".2" max="20" />
+                    </div>
+
+                    <!-- <div class="range2">
+                        <InputRange label="Inner len x" v-model="sp.lenInner.x" min=".2" max="20" />
+                        <InputRange label="Inner len y" v-model="sp.lenInner.y" min=".2" max="20" />
+                        <LockButton />
+                    </div>
     
-                    <InputRange label="Inner len x" v-model="sp.lenInner.x" min=".2" max="20" />
-                    <InputRange label="Inner len y" v-model="sp.lenInner.y" min=".2" max="20" />
-    
-                    <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" />
-                    <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
+                    <div class="range2">
+                        <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" />
+                        <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
+                        <LockButton />
+                    </div> -->
                 </div>
                 <div class="actions">
                     <input @click="actionSave" type="button" value="Save">
@@ -36,8 +45,6 @@
 
             </div>
         </div>
-        <LockButton />
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>        
     </div>
 </template>
 
@@ -148,6 +155,28 @@ body {
 
     display: grid;
     grid-template-rows: 1fr auto;
+
+    .ranges {
+        display: grid;
+    }
+
+    .range2 {
+        display: grid;
+        grid-template-areas: 
+            "aa bb"
+            "aa cc";
+        align-items: center;
+
+        & > *:nth-child(1) {
+            grid-area: aa;
+        }
+        & > *:nth-child(2) {
+            grid-area: bb;
+        }
+        & > *:nth-child(3) {
+            grid-area: cc;
+        }
+    }
 
     .actions {
         display: flex;
