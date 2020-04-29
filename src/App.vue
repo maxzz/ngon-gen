@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div class="main">
-            <svg viewBox="0 0 14 14" class="big-canvas">
+            <svg viewBox="0 0 14 14" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="data.d" />
                 <circle class="origin" :cx="data.cx" :cy="data.cy" r=".3px"></circle>
             </svg>
@@ -16,17 +16,17 @@
                         <InputRange label="Outer len y" v-model="sp.lenOuter.y" min=".2" max="20" />
                     </div>
 
-                    <!-- <div class="range2">
+                    <div class="range2">
+                        <LockButton />
                         <InputRange label="Inner len x" v-model="sp.lenInner.x" min=".2" max="20" />
                         <InputRange label="Inner len y" v-model="sp.lenInner.y" min=".2" max="20" />
-                        <LockButton />
                     </div>
     
                     <div class="range2">
+                        <LockButton />
                         <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" />
                         <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
-                        <LockButton />
-                    </div> -->
+                    </div>
                 </div>
                 <div class="actions">
                     <input @click="actionSave" type="button" value="Save">
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="output">
-            <textarea cols="30" rows="10" :value='`<svg viewBox="0 0 14 14">\n    <path d="${data.d}"/>\n</svg>`'></textarea>
+            <textarea cols="30" rows="10" :value='`<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.d}"/>\n</svg>`'></textarea>
         </div>
         <div>
             <div v-for="(shape, index) of shapes" :key=index @click="applyShape(shape)">
@@ -106,8 +106,8 @@ export default Vue.extend({
             lenOuter: { x: 2.2, y: 2.2 },
             lenInner: { x: 5.2, y: 5.2 },
             offset: { x: 7, y: 7 },
-        });
-
+        },
+        JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'));
         return {
             sp,
             data,
@@ -158,24 +158,34 @@ body {
 
     .ranges {
         display: grid;
+        align-content: start;
     }
 
     .range2 {
         display: grid;
-        grid-template-areas: 
-            "aa bb"
-            "aa cc";
-        align-items: center;
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: min-content min-content;
+        margin-top: 1em;
 
         & > *:nth-child(1) {
-            grid-area: aa;
+            grid-row: 1 / -1;
+            align-self: center;
         }
-        & > *:nth-child(2) {
-            grid-area: bb;
-        }
-        & > *:nth-child(3) {
-            grid-area: cc;
-        }
+
+        // grid-template-areas: 
+        //     "aa bb"
+        //     "aa cc";
+        // align-items: center;
+
+        // & > *:nth-child(1) {
+        //     grid-area: aa;
+        // }
+        // & > *:nth-child(2) {
+        //     grid-area: bb;
+        // }
+        // & > *:nth-child(3) {
+        //     grid-area: cc;
+        // }
     }
 
     .actions {
@@ -213,6 +223,7 @@ body {
     width: 100%;
     padding: 0;
     background-color: hsl(0, 0%, 99%);
+    resize: vertical;
 
     border: none;
     font-size: .9em;

@@ -9,10 +9,6 @@
                 v-on:input="$emit('input', $event.target.value)"
             />
             <div class="gauge-name">
-                <div class="lock-linked">
-                    <LockButton v-model="linked" />
-                    <!--  -->
-                </div>
                 <div class="value">{{value}}</div>
                 <div class="text">{{label}}</div>
             </div>
@@ -23,12 +19,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import LockButton from './LockButton.vue';
 import { ref, watch } from '@vue/composition-api';
 
 export default Vue.extend({
     inheritAttrs: false,
-    components: { LockButton },
     props: ["label", "value"],
     setup() {
         const linked = ref(false);
@@ -68,13 +62,9 @@ label {
 
     .gauge-name {
         display: grid;
-        grid-template-columns: 1fr 1fr minmax(6em, 1fr);
+        grid-template-columns: 1fr minmax(6em, 1fr);
         align-items: center;
         column-gap: .4em;
-
-        .lock-linked {
-            width: 1em;
-        }
 
         .value {
             min-width: 3em;

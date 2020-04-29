@@ -40,13 +40,14 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
     .lock-btn {
-        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-content: center;
     }
 
-    $demed-color: #838383;
-
     .i-lock {
-        fill: $demed-color;
+        fill: white;
+        stroke: none;
 
         svg {
             width: 8px;
