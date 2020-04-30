@@ -9,6 +9,14 @@
                 <div class="ranges">
                     <InputRange label="# outer" v-model="sp.nOuter" min="2" max="70" />
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
+
+                    <LockedPair 
+                        :a='{label: "aa", min: ".2", max: "20", value: sp.lenOuter.x }'
+                        :b='{label: "bb", min: ".2", max: "20", value: sp.lenOuter.y }'
+                        v-model="sp.lenOuter"
+                        :valueA="sp.lenOuter.x"
+                        :valueB="sp.lenOuter.y"
+                    />
     
                     <div class="range2">
                         <LockButton />
@@ -55,6 +63,7 @@ import * as types from "./types";
 import { generate } from './shape-generator';
 import InputRange from './components/InputRange.vue';
 import LockButton from './components/LockButton.vue';
+import LockedPair from './components/LockedPair.vue';
 
 function initShapes(sp: types.ShapeParams) {
         //[
@@ -80,7 +89,9 @@ function initShapes(sp: types.ShapeParams) {
             lenInner: { x: 5.2, y: 5.2 },
             offset: { x: 7, y: 7 },
         },
-        JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}')
+        JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":3,"nInner":2,"lenOuter":{"x":"7.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
     );
 
     function actionSave() {
@@ -107,7 +118,7 @@ function initShapes(sp: types.ShapeParams) {
 
 export default Vue.extend({
     name: "App",
-    components: { InputRange, LockButton },
+    components: { InputRange, LockButton, LockedPair },
     setup() {
         const initialParams: types.ShapeParams = {
             nOuter: 5,
@@ -122,8 +133,8 @@ export default Vue.extend({
         let { applyShape, actionSave, shapes } = initShapes(sp);
 
         function print(e: any) {
-            sp.lenOuter.y = e;
-            console.log('print', e);
+            // sp.lenOuter.y = e;
+            // console.log('print', e);
         }
 
         return {

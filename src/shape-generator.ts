@@ -15,7 +15,7 @@ function rnd2(n: number): number {
 }
 
 export function generate(p: types.ShapeParams) {
-    console.log('sp', p);
+    //console.log('generate: sp', p);
 
     const sp: types.ShapeParams = {
         lenOuter: { x: +p.lenOuter.x, y: +p.lenOuter.y },

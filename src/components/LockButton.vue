@@ -25,8 +25,8 @@ export default Vue.extend({
         const checked = ref(props.value);
 
         function onClick() {
-            console.log('clciked');
             checked.value = !checked.value;
+            console.log('LoackButton clicked', checked.value);
             emit('input', checked.value);
         }
 
