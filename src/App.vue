@@ -3,7 +3,9 @@
         <div class="main">
             <svg viewBox="0 0 14 14" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="data.d" />
-                <circle class="origin" :cx="data.cx" :cy="data.cy" r=".3px"></circle>
+                <path class="helper-out-lines" :d="helpers.outLines" />
+                <path class="helper-inn-lines" :d="helpers.innLines" />
+                <circle class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3px"></circle>
             </svg>
             <div class="right">
                 <div class="ranges">
@@ -92,8 +94,9 @@ function initShapes(sp: types.ShapeParams) {
         JSON.parse('{"nOuter":"16","nInner":"2","lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"8.2","y":"5.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-
-        //JSON.parse(''),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"6.2"},"lenInner":{"x":5.2,"y":"0.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"4","nInner":"6","lenOuter":{"x":"4.2","y":"1.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'),
     );
 
     function actionSave() {
@@ -133,11 +136,26 @@ export default Vue.extend({
 
         let sp = reactive(initialParams);
         let data = computed(() => generate(sp));
+        let helpers = computed(() => {
+            const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${data.value.center.x},${data.value.center.y}L${_[0]},${_[1]}`);
+
+            let inn = data.value.points.filter((_, index) => index % sp.nInner !== 0);
+            let innLines = pointsToLines(inn);
+
+            let out = data.value.points.filter((_, index) => index % sp.nInner === 0);
+            let outLines = pointsToLines(out);
+
+            return {
+                innLines,
+                outLines
+            };
+        });
         let { applyShape, actionSave, shapes } = initShapes(sp);
 
         return {
             sp,
             data,
+            helpers,
             actionSave,
             applyShape,
             generate,
@@ -205,9 +223,19 @@ body {
         stroke-width: .2;
     }
 
+    .helper-out-lines {
+        stroke: rgba(153, 0, 255, 0.4);
+        stroke-width: .1;
+    }
+
+    .helper-inn-lines {
+        stroke: rgba(0, 76, 255, 0.4);
+        stroke-width: .1;
+    }
+
     .origin {
         fill: none;
-        stroke: rgba(255, 0, 0, 0.438);
+        stroke: rgba(255, 0, 0, 0.4);
         stroke-width: .1;
     }
 }

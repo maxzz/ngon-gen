@@ -19,18 +19,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ref, watch } from '@vue/composition-api';
+import { ref } from '@vue/composition-api';
 
 export default Vue.extend({
     inheritAttrs: false,
     props: ["label", "value"],
     setup() {
         const linked = ref(false);
-
-        watch(linked, () => {
-            console.log('paerent check', linked.value);
-        });
-
         return {
             linked
         };

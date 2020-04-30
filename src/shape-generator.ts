@@ -48,7 +48,14 @@ export function generate(p: types.ShapeParams) {
 
     return {
         d,
-        cx: ''+points[0][0],
-        cy: ''+points[0][1],
+        points,
+        start: {
+            cx: ''+points[0][0],
+            cy: ''+points[0][1],
+        },
+        center: {
+            x: 7,
+            y: 7,
+        }
     };
 }
