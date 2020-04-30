@@ -11,29 +11,20 @@
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
 
                     <LockedPair 
-                        :a='{label: "Outer len x", min: ".2", max: "20", value: sp.lenOuter.x }'
-                        :b='{label: "Outer len y", min: ".2", max: "20", value: sp.lenOuter.y }'
+                        :x='{label: "Outer len x", min: ".2", max: "20", value: sp.lenOuter.x }'
+                        :y='{label: "Outer len y", min: ".2", max: "20", value: sp.lenOuter.y }'
                         v-model="sp.lenOuter"
-                        @input="print2"
                     />
     
-                    <div class="range2">
-                        <LockButton />
-                        <InputRange label="Outer len x" v-model="sp.lenOuter.x" min=".2" max="20" @input="print" />
-                        <InputRange label="Outer len y" v-model="sp.lenOuter.y" min=".2" max="20" />
-                    </div>
+                    <LockedPair 
+                        :x='{label: "Inner len x", min: ".2", max: "20", value: sp.lenInner.x }'
+                        :y='{label: "Inner len y", min: ".2", max: "20", value: sp.lenInner.y }'
+                        v-model="sp.lenInner"
+                    />
 
-                    <div class="range2">
-                        <LockButton />
-                        <InputRange label="Inner len x" v-model="sp.lenInner.x" min=".2" max="20" />
-                        <InputRange label="Inner len y" v-model="sp.lenInner.y" min=".2" max="20" />
-                    </div>
-    
-                    <div class="range2">
-                        <LockButton />
-                        <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" />
-                        <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
-                    </div>
+                    <br>
+                    <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" />
+                    <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
                 </div>
                 <div class="actions">
                     <input @click="actionSave" type="button" value="Save">
@@ -98,6 +89,11 @@ function initShapes(sp: types.ShapeParams) {
         JSON.parse('{"nOuter":"6","nInner":"3","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"2.2","y":"6.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"16","nInner":"2","lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"8.2","y":"5.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+
+        //JSON.parse(''),
     );
 
     function actionSave() {
@@ -108,11 +104,12 @@ function initShapes(sp: types.ShapeParams) {
         console.log('shape', shape);
         //sp = reactive({...shape});
         //sp = reactive(JSON.parse(JSON.stringify(shape)));
-        sp.nOuter= shape.nOuter;
-        sp.nInner= shape.nInner;
-        sp.lenOuter = shape.lenOuter;
-        sp.lenInner = shape.lenInner;
-        sp.offset= shape.offset;
+        let upd = JSON.parse(JSON.stringify(shape));
+        sp.nOuter= upd.nOuter;
+        sp.nInner= upd.nInner;
+        sp.lenOuter = upd.lenOuter;
+        sp.lenInner = upd.lenInner;
+        sp.offset= upd.offset;
     }
 
     return {
@@ -138,19 +135,7 @@ export default Vue.extend({
         let data = computed(() => generate(sp));
         let { applyShape, actionSave, shapes } = initShapes(sp);
 
-        function print(e: any) {
-            // sp.lenOuter.y = e;
-            console.log('print', e);
-        }
-
-        function print2(e: any) {
-            // sp.lenOuter.y = e;
-            console.log('a print', e);
-        }
-
         return {
-            print,
-            print2,
             sp,
             data,
             actionSave,
@@ -201,33 +186,6 @@ body {
     .ranges {
         display: grid;
         align-content: start;
-    }
-
-    .range2 {
-        display: grid;
-        grid-template-columns: min-content 1fr;
-        grid-template-rows: min-content min-content;
-        margin-top: 1em;
-
-        & > *:nth-child(1) {
-            grid-row: 1 / -1;
-            align-self: center;
-        }
-
-        // grid-template-areas: 
-        //     "aa bb"
-        //     "aa cc";
-        // align-items: center;
-
-        // & > *:nth-child(1) {
-        //     grid-area: aa;
-        // }
-        // & > *:nth-child(2) {
-        //     grid-area: bb;
-        // }
-        // & > *:nth-child(3) {
-        //     grid-area: cc;
-        // }
     }
 
     .actions {

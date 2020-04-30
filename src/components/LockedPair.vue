@@ -1,8 +1,8 @@
 <template>
     <div class="range2">
-        <LockButton />
-        <InputRange v-bind={...a} v-model="a.value" @input="onInputA" />
-        <InputRange v-bind={...b} :value="b.value" @input="onInputB" />
+        <LockButton v-model="locked" />
+        <InputRange v-bind={...x} :value="x.value" @input="onInputX" />
+        <InputRange v-bind={...y} :value="y.value" @input="onInputY" />
     </div>
 </template>
 
@@ -10,29 +10,69 @@
 import Vue from "vue";
 import InputRange from './InputRange.vue';
 import LockButton from './LockButton.vue';
-import { ref, reactive } from '@vue/composition-api';
+import { ref, reactive, watch } from '@vue/composition-api';
 
 export default Vue.extend({
     components: { InputRange, LockButton },
     inheritAttrs: false,
-    props: ['a', 'b', 'value', 'valueA', 'valueB'],
+    props: ['x', 'y', 'value'],
     setup(props: any, { emit }) {
-        function onInputA(e: any) {
-            emit('input', { x: e, y: props.value.y });
-            console.log('print new =', e, 'value =', JSON.stringify(props.value));
+
+        const locked = ref(false);
+
+        watch(locked, () => emit('input', { x: props.value.x, y: props.value.x }))
+        
+        function onInputX(v: number) {
+            if (locked.value) {
+                emit('input', { x: v, y: v });
+            } else {
+                emit('input', { x: v, y: props.value.y });
+            }
         }
 
-        function onInputB(e: any) {
-            emit('input', { x: props.value.x, y: e });
+        function onInputY(v: number) {
+            if (locked.value) {
+                emit('input', { x: v, y: v });
+            } else {
+                emit('input', { x: props.value.x, y: v });
+            }
         }
 
         return {
-            onInputA,
-            onInputB,
+            locked,
+            onInputX,
+            onInputY,
         };
     }    
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .range2 {
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: min-content min-content;
+        margin-top: 1em;
+
+        & > *:nth-child(1) {
+            grid-row: 1 / -1;
+            align-self: center;
+        }
+
+        // grid-template-areas: 
+        //     "aa bb"
+        //     "aa cc";
+        // align-items: center;
+
+        // & > *:nth-child(1) {
+        //     grid-area: aa;
+        // }
+        // & > *:nth-child(2) {
+        //     grid-area: bb;
+        // }
+        // & > *:nth-child(3) {
+        //     grid-area: cc;
+        // }
+    }
+
 </style>
