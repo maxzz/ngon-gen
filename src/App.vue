@@ -44,7 +44,7 @@
         <div class="output">
             <textarea cols="30" rows="10" :value='`<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.d}"/>\n</svg>`'></textarea>
         </div>
-        <div>
+        <div class="previews">
             <div v-for="(shape, index) of shapes" :key=index @click="applyShape(shape)">
                 <svg viewBox="0 0 14 14" class="small-canvas">
                     <path :d="generate(shape).d" />
@@ -92,6 +92,7 @@ function initShapes(sp: types.ShapeParams) {
         JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":3,"nInner":2,"lenOuter":{"x":"7.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
     );
 
     function actionSave() {
@@ -242,11 +243,18 @@ body {
     }
 }
 
+$small-canvas-cell-size: 64px;
+
 .small-canvas {
-    width: 64px;
+    width: $small-canvas-cell-size;
     .origin {
         display: none;
     }
+}
+
+.previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax($small-canvas-cell-size, 1fr));
 }
 
 .output textarea {

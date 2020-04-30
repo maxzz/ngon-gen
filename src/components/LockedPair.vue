@@ -21,12 +21,12 @@ export default Vue.extend({
     setup(props: any) {
         // const valueA = ref(props.value.x);
         // const valueB = ref(props.value.y);
-        const valueAA = ref(props.valueA);
-        const valueBB = ref(props.valueB);
+        // const valueAA = ref(props.valueA);
+        // const valueBB = ref(props.valueB);
 
         function onInputA(e: any) {
             props.value.x = e;
-            console.log('print new =', e, 'value =', props.value);
+            console.log('print new =', e, 'value =', JSON.stringify(props.value));
         }
 
         function onInputB(e: any) {
@@ -35,8 +35,8 @@ export default Vue.extend({
         }
 
         return {
-            valueAA,
-            valueBB,
+            // valueAA,
+            // valueBB,
             onInputA,
             onInputB,
         };
