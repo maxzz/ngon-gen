@@ -12,7 +12,7 @@
     
                     <div class="range2">
                         <LockButton />
-                        <InputRange label="Outer len x" v-model="sp.lenOuter.x" min=".2" max="20" />
+                        <InputRange label="Outer len x" v-model="sp.lenOuter.x" min=".2" max="20" @input="print" />
                         <InputRange label="Outer len y" v-model="sp.lenOuter.y" min=".2" max="20" />
                     </div>
 
@@ -56,40 +56,13 @@ import { generate } from './shape-generator';
 import InputRange from './components/InputRange.vue';
 import LockButton from './components/LockButton.vue';
 
-export default Vue.extend({
-    name: "App",
-    components: { InputRange, LockButton },
-    setup() {
-        const initialParams: types.ShapeParams = {
-            nOuter: 5,
-            nInner: 2,
-            lenOuter: { x: 2.2, y: 2.2 },
-            lenInner: { x: 5.2, y: 5.2 },
-            offset: { x: 7, y: 7 },
-        };
-
-        let sp = reactive(initialParams);
-
-        let data = computed(() => {
-            return generate(sp);
-        });
-
-        function actionSave() {
-            shapes.value.push(JSON.parse(JSON.stringify(sp)));
-        }
-
-        function applyShape(shape: types.ShapeParams) {
-            console.log('shape', shape);
-            //sp = reactive({...shape});
-            //sp = reactive(JSON.parse(JSON.stringify(shape)));
-            sp.nOuter= shape.nOuter;
-            sp.nInner= shape.nInner;
-            sp.lenOuter = shape.lenOuter;
-            sp.lenInner = shape.lenInner;
-            sp.offset= shape.offset;
-        }
-
-        //[{"nOuter":3,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},{"nOuter":4,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}]
+function initShapes(sp: types.ShapeParams) {
+        //[
+        //{"nOuter":3,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},
+        //{"nOuter":4,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},
+        //{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},
+        //{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}
+        //]
 
         let shapes = ref<types.ShapeParams[]>([]);
 
@@ -107,8 +80,54 @@ export default Vue.extend({
             lenInner: { x: 5.2, y: 5.2 },
             offset: { x: 7, y: 7 },
         },
-        JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'));
+        JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}')
+    );
+
+    function actionSave() {
+        shapes.value.push(JSON.parse(JSON.stringify(sp)));
+    }
+
+    function applyShape(shape: types.ShapeParams) {
+        console.log('shape', shape);
+        //sp = reactive({...shape});
+        //sp = reactive(JSON.parse(JSON.stringify(shape)));
+        sp.nOuter= shape.nOuter;
+        sp.nInner= shape.nInner;
+        sp.lenOuter = shape.lenOuter;
+        sp.lenInner = shape.lenInner;
+        sp.offset= shape.offset;
+    }
+
+    return {
+        actionSave,
+        applyShape,
+        shapes
+    };
+} //initShapes()
+
+export default Vue.extend({
+    name: "App",
+    components: { InputRange, LockButton },
+    setup() {
+        const initialParams: types.ShapeParams = {
+            nOuter: 5,
+            nInner: 2,
+            lenOuter: { x: 2.2, y: 2.2 },
+            lenInner: { x: 5.2, y: 5.2 },
+            offset: { x: 7, y: 7 },
+        };
+
+        let sp = reactive(initialParams);
+        let data = computed(() => generate(sp));
+        let { applyShape, actionSave, shapes } = initShapes(sp);
+
+        function print(e: any) {
+            sp.lenOuter.y = e;
+            console.log('print', e);
+        }
+
         return {
+            print,
             sp,
             data,
             actionSave,
