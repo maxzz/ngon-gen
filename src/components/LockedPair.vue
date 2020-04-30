@@ -3,8 +3,6 @@
         <LockButton />
         <InputRange v-bind={...a} v-model="a.value" @input="onInputA" />
         <InputRange v-bind={...b} :value="b.value" @input="onInputB" />
-        <!-- <InputRange v-bind={...a} v-model="valueA" @input="onInputA" />
-        <InputRange v-bind={...b} v-model="valueB" @input="onInputB" /> -->
     </div>
 </template>
 
@@ -19,25 +17,16 @@ export default Vue.extend({
     inheritAttrs: false,
     props: ['a', 'b', 'value', 'valueA', 'valueB'],
     setup(props: any, { emit }) {
-        // const valueA = ref(props.value.x);
-        // const valueB = ref(props.value.y);
-        // const valueAA = ref(props.valueA);
-        // const valueBB = ref(props.valueB);
-
         function onInputA(e: any) {
-            //props.a.value = e;
-            emit('input', reactive({ x: e, y: props.value.y }));
+            emit('input', { x: e, y: props.value.y });
             console.log('print new =', e, 'value =', JSON.stringify(props.value));
         }
 
         function onInputB(e: any) {
-            props.value.y = e;
-            console.log('print new =', e, 'value =', props.value);
+            emit('input', { x: props.value.x, y: e });
         }
 
         return {
-            // valueAA,
-            // valueBB,
             onInputA,
             onInputB,
         };

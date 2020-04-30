@@ -11,11 +11,9 @@
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
 
                     <LockedPair 
-                        :a='{label: "aa", min: ".2", max: "20", value: sp.lenOuter.x }'
-                        :b='{label: "bb", min: ".2", max: "20", value: sp.lenOuter.y }'
+                        :a='{label: "Outer len x", min: ".2", max: "20", value: sp.lenOuter.x }'
+                        :b='{label: "Outer len y", min: ".2", max: "20", value: sp.lenOuter.y }'
                         v-model="sp.lenOuter"
-                        :valueA="sp.lenOuter.x"
-                        :valueB="sp.lenOuter.y"
                         @input="print2"
                     />
     
@@ -92,6 +90,14 @@ function initShapes(sp: types.ShapeParams) {
         JSON.parse('{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"10","nInner":"6","lenOuter":{"x":"3.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"0.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"6","nInner":"3","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"2.2","y":"6.2"},"offset":{"x":7,"y":7}}'),
     );
 
     function actionSave() {
