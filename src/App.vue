@@ -16,6 +16,7 @@
                         v-model="sp.lenOuter"
                         :valueA="sp.lenOuter.x"
                         :valueB="sp.lenOuter.y"
+                        @input="print2"
                     />
     
                     <div class="range2">
@@ -66,13 +67,6 @@ import LockButton from './components/LockButton.vue';
 import LockedPair from './components/LockedPair.vue';
 
 function initShapes(sp: types.ShapeParams) {
-        //[
-        //{"nOuter":3,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},
-        //{"nOuter":4,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},
-        //{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}},
-        //{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}
-        //]
-
         let shapes = ref<types.ShapeParams[]>([]);
 
         shapes.value.push({
@@ -82,6 +76,11 @@ function initShapes(sp: types.ShapeParams) {
             lenInner: { x: 5.2, y: 5.2 },
             offset: { x: 7, y: 7 },
         },
+        JSON.parse('{"nOuter":3,"nInner":2,"lenOuter":{"x":"7.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+
+        JSON.parse('{"nOuter":4,"nInner":2,"lenOuter":{"x":"0.2","y":"1.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         {
             nOuter: 4,
             nInner: 2,
@@ -90,10 +89,9 @@ function initShapes(sp: types.ShapeParams) {
             offset: { x: 7, y: 7 },
         },
         JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":3,"nInner":2,"lenOuter":{"x":"7.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
     );
 
     function actionSave() {
@@ -136,11 +134,17 @@ export default Vue.extend({
 
         function print(e: any) {
             // sp.lenOuter.y = e;
-            // console.log('print', e);
+            console.log('print', e);
+        }
+
+        function print2(e: any) {
+            // sp.lenOuter.y = e;
+            console.log('a print', e);
         }
 
         return {
             print,
+            print2,
             sp,
             data,
             actionSave,

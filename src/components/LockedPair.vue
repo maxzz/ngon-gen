@@ -12,13 +12,13 @@
 import Vue from "vue";
 import InputRange from './InputRange.vue';
 import LockButton from './LockButton.vue';
-import { ref } from '@vue/composition-api';
+import { ref, reactive } from '@vue/composition-api';
 
 export default Vue.extend({
     components: { InputRange, LockButton },
     inheritAttrs: false,
     props: ['a', 'b', 'value', 'valueA', 'valueB'],
-    setup(props: any) {
+    setup(props: any, { emit }) {
         // const valueA = ref(props.value.x);
         // const valueB = ref(props.value.y);
         // const valueAA = ref(props.valueA);
@@ -26,6 +26,7 @@ export default Vue.extend({
 
         function onInputA(e: any) {
             //props.a.value = e;
+            emit('input', reactive({ x: e, y: props.value.y }));
             console.log('print new =', e, 'value =', JSON.stringify(props.value));
         }
 
