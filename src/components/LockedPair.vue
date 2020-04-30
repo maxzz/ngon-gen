@@ -1,8 +1,8 @@
 <template>
     <div class="range2">
         <LockButton />
-        <InputRange v-bind={...a} :value="valueA" @input="onInputA" />
-        <InputRange v-bind={...b} :value="valueB" @input="onInputB" />
+        <InputRange v-bind={...a} v-model="a.value" @input="onInputA" />
+        <InputRange v-bind={...b} :value="b.value" @input="onInputB" />
         <!-- <InputRange v-bind={...a} v-model="valueA" @input="onInputA" />
         <InputRange v-bind={...b} v-model="valueB" @input="onInputB" /> -->
     </div>
@@ -25,7 +25,7 @@ export default Vue.extend({
         // const valueBB = ref(props.valueB);
 
         function onInputA(e: any) {
-            props.value.x = e;
+            //props.a.value = e;
             console.log('print new =', e, 'value =', JSON.stringify(props.value));
         }
 
