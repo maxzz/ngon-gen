@@ -1,8 +1,10 @@
 <template>
     <div class="range2">
         <LockButton />
-        <InputRange v-bind={...a} v-model="valueA" @input="onInputA" />
-        <InputRange v-bind={...b} v-model="valueB" @input="onInputB" />
+        <InputRange v-bind={...a} :value="valueA" @input="onInputA" />
+        <InputRange v-bind={...b} :value="valueB" @input="onInputB" />
+        <!-- <InputRange v-bind={...a} v-model="valueA" @input="onInputA" />
+        <InputRange v-bind={...b} v-model="valueB" @input="onInputB" /> -->
     </div>
 </template>
 
@@ -15,10 +17,12 @@ import { ref } from '@vue/composition-api';
 export default Vue.extend({
     components: { InputRange, LockButton },
     inheritAttrs: false,
-    props: ['a', 'b', 'value'],
+    props: ['a', 'b', 'value', 'valueA', 'valueB'],
     setup(props: any) {
-        const valueA = ref(props.value.x);
-        const valueB = ref(props.value.y);
+        // const valueA = ref(props.value.x);
+        // const valueB = ref(props.value.y);
+        const valueAA = ref(props.valueA);
+        const valueBB = ref(props.valueB);
 
         function onInputA(e: any) {
             props.value.x = e;
@@ -31,8 +35,8 @@ export default Vue.extend({
         }
 
         return {
-            valueA,
-            valueB,
+            valueAA,
+            valueBB,
             onInputA,
             onInputB,
         };
