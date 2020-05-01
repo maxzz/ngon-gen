@@ -3,9 +3,9 @@
         <div class="main">
             <svg viewBox="0 0 14 14" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="data.d" />
-                <path class="helper-out-lines" :d="helpers.outLines" />
-                <path class="helper-inn-lines" :d="helpers.innLines" />
-                <circle class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3px"></circle>
+                <path v-if="showLines" class="helper-out-lines" :d="helpers.outLines" />
+                <path v-if="showLines" class="helper-inn-lines" :d="helpers.innLines" />
+                <circle v-if="showLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3px"></circle>
             </svg>
             <div class="right">
                 <div class="ranges">
@@ -29,6 +29,7 @@
                     <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
                 </div>
                 <div class="actions">
+                    <label><input type="checkbox" @click="toggleLines">Lines</label>
                     <input @click="actionSave" type="button" value="Save">
                 </div>
             </div>
@@ -97,6 +98,8 @@ function initShapes(sp: types.ShapeParams) {
         JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"6.2"},"lenInner":{"x":5.2,"y":"0.2"},"offset":{"x":7,"y":7}}'),
         JSON.parse('{"nOuter":"4","nInner":"6","lenOuter":{"x":"4.2","y":"1.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":2.2},"lenInner":{"x":"7.2","y":"2.2"},"offset":{"x":7,"y":7}}'),
+        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
     );
 
     function actionSave() {
@@ -135,6 +138,7 @@ export default Vue.extend({
         };
 
         let sp = reactive(initialParams);
+        
         let data = computed(() => generate(sp));
         let helpers = computed(() => {
             const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${data.value.center.x},${data.value.center.y}L${_[0]},${_[1]}`);
@@ -150,7 +154,11 @@ export default Vue.extend({
                 outLines
             };
         });
+
         let { applyShape, actionSave, shapes } = initShapes(sp);
+
+        const showLines = ref(false);
+        const toggleLines = () => { showLines.value = !showLines.value; };
 
         return {
             sp,
@@ -158,6 +166,8 @@ export default Vue.extend({
             helpers,
             actionSave,
             applyShape,
+            showLines,
+            toggleLines,
             generate,
             shapes
         };
@@ -195,11 +205,13 @@ body {
 }
 
 .right {
-    background-color: hsl(261, 100%, 10%);
-    padding: .4em;
-
     display: grid;
     grid-template-rows: 1fr auto;
+
+    user-select: none;
+    background-color: hsl(261, 100%, 10%);
+    padding: .4em;
+    //font-size: .8rem;
 
     .ranges {
         display: grid;
@@ -209,6 +221,10 @@ body {
     .actions {
         display: flex;
         justify-content: flex-end;
+
+        & > *:first-child {
+            flex-grow: 1;
+        }
     }
 }
 
