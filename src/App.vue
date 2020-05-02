@@ -13,14 +13,14 @@
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
 
                     <LockedPair 
-                        :x='{label: "Outer len x", min: ".2", max: "20", value: sp.lenOuter.x }'
-                        :y='{label: "Outer len y", min: ".2", max: "20", value: sp.lenOuter.y }'
+                        :x='{label: "Outer len x", min: ".2", max: "20", value: sp.lenOuter.x,  step: ".1" }'
+                        :y='{label: "Outer len y", min: ".2", max: "20", value: sp.lenOuter.y,  step: ".1" }'
                         v-model="sp.lenOuter"
                     />
     
                     <LockedPair 
-                        :x='{label: "Inner len x", min: ".2", max: "20", value: sp.lenInner.x }'
-                        :y='{label: "Inner len y", min: ".2", max: "20", value: sp.lenInner.y }'
+                        :x='{label: "Inner len x", min: ".2", max: "20", value: sp.lenInner.x,  step: ".1" }'
+                        :y='{label: "Inner len y", min: ".2", max: "20", value: sp.lenInner.y,  step: ".1" }'
                         v-model="sp.lenInner"
                     />
 
@@ -38,7 +38,8 @@
             <textarea cols="30" rows="10" :value='`<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.d}"/>\n</svg>`'></textarea>
         </div>
         <div class="previews">
-            <div v-for="(shape, index) of shapes" :key=index @click="applyShape(shape)">
+            <div v-for="(shape, index) of shapes" :key=index @click="applyShape(shape)" class="preview">
+                <div class="preview-id">{{index + 1}}</div>
                 <svg viewBox="0 0 14 14" class="small-canvas">
                     <path :d="generate(shape).d" />
                     <circle class="origin" :cx="data.cx" :cy="data.cy" r=".3px"></circle>
@@ -59,48 +60,53 @@ import LockButton from './components/LockButton.vue';
 import LockedPair from './components/LockedPair.vue';
 
 function initShapes(sp: types.ShapeParams) {
-        let shapes = ref<types.ShapeParams[]>([]);
+    const shapeLines = [
+        '{"nOuter":3,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":3,"nInner":2,"lenOuter":{"x":"7.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":4,"nInner":2,"lenOuter":{"x":"0.2","y":"1.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":4,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"10","nInner":"6","lenOuter":{"x":"3.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"0.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"4.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"6","nInner":"3","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"2.2","y":"6.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"16","nInner":"2","lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"8.2","y":"5.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"6.2"},"lenInner":{"x":5.2,"y":"0.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"4","nInner":"6","lenOuter":{"x":"4.2","y":"1.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":2.2},"lenInner":{"x":"7.2","y":"2.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"6","nInner":2,"lenOuter":{"x":"4.5","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.3","y":"5.7"},"lenInner":{"x":"4.3","y":"2.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.3","y":"6.3"},"lenInner":{"x":"5.3","y":"0.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.4","y":"5.1"},"lenInner":{"x":"4.7","y":"2.6"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"4.5"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"4","nInner":"8","lenOuter":{"x":"4.2","y":"5.3"},"lenInner":{"x":"0.2","y":"5.2"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"3","nInner":"8","lenOuter":{"x":"4.9","y":"5.7"},"lenInner":{"x":"7.8","y":"3"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"3","nInner":"2","lenOuter":{"x":"6.7","y":"5.2"},"lenInner":{"x":"4.2","y":"5.9"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"5","nInner":"6","lenOuter":{"x":"5.9","y":"4.6"},"lenInner":{"x":"2.3","y":"6.9"},"offset":{"x":7,"y":7}}',
+        '{"nOuter":"18","nInner":2,"lenOuter":{"x":"5","y":"5.6"},"lenInner":{"x":"2.8","y":"6.1"},"offset":{"x":"7","y":"7"}}',
+    ];
 
-        shapes.value.push({
-            nOuter: 3,
-            nInner: 2,
-            lenOuter: { x: 2.2, y: 2.2 },
-            lenInner: { x: 5.2, y: 5.2 },
-            offset: { x: 7, y: 7 },
-        },
-        JSON.parse('{"nOuter":3,"nInner":2,"lenOuter":{"x":"7.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-
-        JSON.parse('{"nOuter":4,"nInner":2,"lenOuter":{"x":"0.2","y":"1.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        {
-            nOuter: 4,
-            nInner: 2,
-            lenOuter: { x: 2.2, y: 2.2 },
-            lenInner: { x: 5.2, y: 5.2 },
-            offset: { x: 7, y: 7 },
-        },
-        JSON.parse('{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"10","nInner":"6","lenOuter":{"x":"3.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"0.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"4.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"6","nInner":"3","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"2.2","y":"6.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"16","nInner":"2","lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"8.2","y":"5.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"6.2"},"lenInner":{"x":5.2,"y":"0.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":"4","nInner":"6","lenOuter":{"x":"4.2","y":"1.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":2.2},"lenInner":{"x":"7.2","y":"2.2"},"offset":{"x":7,"y":7}}'),
-        JSON.parse('{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}'),
-    );
+    let shapes = ref<types.ShapeParams[]>([]);
+    shapeLines.forEach(_ => {
+        try {
+            shapes.value.push(JSON.parse(_));
+        } catch (error) {
+            console.log(`Bad shape: "${_}"`);
+        }
+    });
 
     function actionSave() {
         shapes.value.push(JSON.parse(JSON.stringify(sp)));
@@ -228,9 +234,11 @@ body {
     }
 }
 
+$canvas-bkg: hsl(208, 100%, 95%);
+
 .big-canvas, .small-canvas {
     width: 100%;
-    background-color: hsl(208, 100%, 95%);
+    background-color: $canvas-bkg;
     border: 1px solid rgb(243, 243, 243);
 
     path {
@@ -268,6 +276,18 @@ $small-canvas-cell-size: 64px;
 .previews {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax($small-canvas-cell-size, 1fr));
+
+    .preview {
+        position: relative;
+    }
+
+    .preview-id {
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+        font-size: .6em;
+        color: darken($canvas-bkg, 20%);
+    }
 }
 
 .output textarea {
