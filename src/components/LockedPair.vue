@@ -50,30 +50,31 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
     .range2 {
-        display: grid;
-        grid-template-columns: min-content 1fr;
-        grid-template-rows: min-content min-content;
         margin-top: 1em;
 
-        & > *:nth-child(1) {
-            grid-row: 1 / -1;
-            align-self: center;
-        }
-
-        // grid-template-areas: 
-        //     "aa bb"
-        //     "aa cc";
-        // align-items: center;
+        display: grid;
+        // grid-template-columns: min-content 1fr;
+        // grid-template-rows: min-content min-content;
 
         // & > *:nth-child(1) {
-        //     grid-area: aa;
+        //     grid-row: 1 / -1;
+        //     align-self: center;
         // }
-        // & > *:nth-child(2) {
-        //     grid-area: bb;
-        // }
-        // & > *:nth-child(3) {
-        //     grid-area: cc;
-        // }
+
+        grid-template-areas: 
+            "bb aa"
+            "cc aa";
+        align-items: center;
+
+        & > *:nth-child(1) {
+            grid-area: aa;
+        }
+        & > *:nth-child(2) {
+            grid-area: bb;
+        }
+        & > *:nth-child(3) {
+            grid-area: cc;
+        }
     }
 
 </style>
