@@ -3,11 +3,11 @@
         v-bind="$attrs"
         @click="onClick"
     >
-        <svg v-if="checked" class="i-lock" viewBox="0 0 16 16" width="16" height="16">
-            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/>
+        <svg v-if="checked" class="i-lock" viewBox="0 0 16 16">
+            <path d="M7.5 4v1h-1V4c0-1.5 1.7-3 3.5-3s3.5 1.5 3.5 3v4c0 1.4-1.7 3-3.5 3-1.4 0-2.7-.9-3.3-2h1.2c.4.6 1.3 1 2.1 1 1.3 0 2.5-1 2.5-2V4c0-1-1.2-2-2.5-2S7.5 3 7.5 4zm3 9v-1h-1v1c0 1-1.2 2-2.5 2s-2.5-1-2.5-2V9c0-1 1.2-2 2.5-2 .8 0 1.6.4 2.1 1h1.2C9.7 6.9 8.4 6 7 6 5.2 6 3.5 7.6 3.5 9v4c0 1.4 1.7 3 3.5 3s3.5-1.5 3.5-3z"/>
         </svg>
-        <svg v-else class="i-lock" viewBox="0 0 16 16" width="16" height="16">
-            <path d="M2 6.5C2 5.2 3 4 4 4h4V3H4C2.5 3 1 4.7 1 6.5S2.5 10 4 10h1V9H4C3 9 2 7.8 2 6.5zM13 6h-1v1h1c1 0 2 1.2 2 2.5S14 12 13 12H8.3v1H13c1.5 0 3-1.7 3-3.5S14.5 6 13 6z"/>
+        <svg v-else class="i-lock unlocked" viewBox="0 0 16 16">
+            <path d="M10 2c1.3 0 2.5 1 2.5 2v4h1V4c0-1.5-1.7-3-3.5-3S6.5 2.5 6.5 4v1h1V4c0-1 1.2-2 2.5-2zm.5 11v-1h-1v1c0 1-1.2 2-2.5 2s-2.5-1-2.5-2V8.3h-1V13c0 1.5 1.7 3 3.5 3s3.5-1.5 3.5-3z"/>
         </svg>
     </div>
 </template>
@@ -40,21 +40,21 @@ export default Vue.extend({
         display: flex;
         justify-content: center;
         align-content: center;
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
     }
 
     .i-lock {
         fill: white;
         stroke: none;
-        transform: rotateZ(70deg);
 
-        svg {
-            width: 8px;
-            height: 12px;
-            
+        transition: all 3s;
+    }
 
-            path {
-                
-            }
-        }
+    .unlocked {
+        transform: rotateZ(-20deg);
     }
 </style>
