@@ -45,10 +45,16 @@ export default Vue.extend({
     .i-lock {
         fill: white;
         stroke: none;
+        transform: rotateZ(70deg);
 
         svg {
             width: 8px;
             height: 12px;
+            
+
+            path {
+                
+            }
         }
     }
 </style>
