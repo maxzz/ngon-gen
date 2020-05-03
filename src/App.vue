@@ -28,6 +28,7 @@
                     <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" step=".1" />
                     <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" step=".1" />
                     <InputRange label="Scale" v-model="sp.sceneScale" min=".01" max="4" step=".01" />
+                    <!-- <InputRange label="Stroke" v-model="sp.strokeWidth" min=".01" max="4" step=".01" /> -->
                 </div>
                 <div class="actions">
                     <label><input type="checkbox" @click="toggleLines">Lines</label>

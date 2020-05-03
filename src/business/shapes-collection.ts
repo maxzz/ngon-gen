@@ -18,12 +18,21 @@ export function initShapes(sp: types.ShapeParams) {
     }
 
     function applyShape(shape: types.ShapeParams) {
-        let upd = JSON.parse(JSON.stringify(shape));
-        sp.nOuter= upd.nOuter;
-        sp.nInner= upd.nInner;
-        sp.lenOuter = upd.lenOuter;
-        sp.lenInner = upd.lenInner;
-        sp.offset= upd.offset;
+        let upd = JSON.parse(JSON.stringify(shape)) as types.ShapeParams;
+
+        // defaults for missing
+        !upd.sceneScale && (upd.sceneScale = 1);
+        
+        for (let [key, val] of Object.entries(upd)) {
+            (sp as any)[key] = val;
+        }
+
+        // sp.nOuter= upd.nOuter;
+        // sp.nInner= upd.nInner;
+        // sp.lenOuter = upd.lenOuter;
+        // sp.lenInner = upd.lenInner;
+        // sp.offset = upd.offset;
+        // sp.sceneScale = upd.sceneScale;
     }
 
     return {

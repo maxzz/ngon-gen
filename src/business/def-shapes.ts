@@ -9,6 +9,7 @@ export const shapeLines = [
     '{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
     '{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
     '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
+    
     '{"nOuter":"10","nInner":"6","lenOuter":{"x":"3.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
     '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
     '{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"0.2"},"offset":{"x":7,"y":7}}',
@@ -18,7 +19,8 @@ export const shapeLines = [
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"2.2","y":"6.2"},"offset":{"x":7,"y":7}}',
     '{"nOuter":"16","nInner":"2","lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-    '{"nOuter":5,"nInner":2,"lenOuter":{"x":"8.2","y":"5.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
+    '{"nOuter":5,"nInner":2,"lenOuter":{"x":"8.2","y":"5.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"sceneScale":"0.81"}',
+    
     '{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"6.2"},"lenInner":{"x":5.2,"y":"0.2"},"offset":{"x":7,"y":7}}',
@@ -29,6 +31,7 @@ export const shapeLines = [
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.3","y":"5.7"},"lenInner":{"x":"4.3","y":"2.2"},"offset":{"x":7,"y":7}}',
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.3","y":"6.3"},"lenInner":{"x":"5.3","y":"0.2"},"offset":{"x":7,"y":7}}',
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.4","y":"5.1"},"lenInner":{"x":"4.7","y":"2.6"},"offset":{"x":7,"y":7}}',
+    
     '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"4.5"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
     '{"nOuter":"4","nInner":"8","lenOuter":{"x":"4.2","y":"5.3"},"lenInner":{"x":"0.2","y":"5.2"},"offset":{"x":7,"y":7}}',
     '{"nOuter":"3","nInner":"8","lenOuter":{"x":"4.9","y":"5.7"},"lenInner":{"x":"7.8","y":"3"},"offset":{"x":7,"y":7}}',
@@ -36,7 +39,7 @@ export const shapeLines = [
     '{"nOuter":"5","nInner":"6","lenOuter":{"x":"5.9","y":"4.6"},"lenInner":{"x":"2.3","y":"6.9"},"offset":{"x":7,"y":7}}',
     '{"nOuter":"18","nInner":2,"lenOuter":{"x":"5","y":"5.6"},"lenInner":{"x":"2.8","y":"6.1"},"offset":{"x":"7","y":"7"}}',
     '{"nOuter":"6","nInner":2,"lenOuter":{"x":"6.9","y":"3"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-    '{"nOuter":5,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":"11.4","y":"0.2"},"offset":{"x":7,"y":7}}',
+    '{"nOuter":5,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":"11.4","y":"0.2"},"offset":{"x":7,"y":7},"sceneScale":"0.63"}',
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":"5.4"},"offset":{"x":7,"y":"7.7"},"sceneScale":"1.34"}',
     '{"nOuter":5,"nInner":2,"lenOuter":{"x":"0.302","y":"6.502"},"lenInner":{"x":"5.502","y":"0.002"},"offset":{"x":"7.5","y":"6.4"},"sceneScale":1}',
 ];
