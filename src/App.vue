@@ -36,7 +36,8 @@
             </div>
         </div>
         <div class="output">
-            <textarea cols="30" rows="10" :value='`<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.d}"/>\n</svg>`'></textarea>
+            <textarea cols="30" rows="10" :value='outputSvgText'></textarea>
+            <input @click="downloadSvg" type="button" value="Download">
         </div>
         <div class="previews">
             <div v-for="(shape, index) of shapes" :key=index @click="applyShape(shape)" class="preview">
@@ -56,6 +57,7 @@ import { ref, reactive, computed } from '@vue/composition-api';
 import * as types from "./business/types";
 import { generate } from './business/shape-generator';
 import { initShapes } from './business/shapes-collection';
+import download from 'downloadjs';
 import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 
@@ -95,6 +97,13 @@ export default Vue.extend({
         const showLines = ref(false);
         const toggleLines = () => { showLines.value = !showLines.value; };
 
+        let outputSvgText = computed(() => {
+            return `<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.value.d}"/>\n</svg>`;
+        });
+        function downloadSvg() {
+            download(outputSvgText.value, 'generated.svg', 'text/plain');
+        }
+
         return {
             sp,
             data,
@@ -103,6 +112,8 @@ export default Vue.extend({
             applyShape,
             showLines,
             toggleLines,
+            outputSvgText,
+            downloadSvg,
             generate,
             shapes
         };
