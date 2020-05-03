@@ -23,6 +23,7 @@ export function generate(p: types.ShapeParams) {
         offset: { x: +p.offset.x, y: +p.offset.y },
         nOuter: +p.nOuter,
         nInner: +p.nInner,
+        sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
     };
 
     // generate points
@@ -33,6 +34,11 @@ export function generate(p: types.ShapeParams) {
         return index % sp.nInner === 0 
             ? [ _[0] * sp.lenInner.x, _[1] * sp.lenInner.y ] 
             : [ _[0] * sp.lenOuter.x, _[1] * sp.lenOuter.y ];
+    });
+
+    // scene scale
+    points = points.map((_, index) => {
+        return [ _[0] * sp.sceneScale, _[1] * sp.sceneScale ];
     });
 
     // offset

@@ -5,7 +5,7 @@
                 <path :d="data.d" />
                 <path v-if="showLines" class="helper-out-lines" :d="helpers.outLines" />
                 <path v-if="showLines" class="helper-inn-lines" :d="helpers.innLines" />
-                <circle v-if="showLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3px"></circle>
+                <circle v-if="showLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3"></circle>
             </svg>
             <div class="right">
                 <div class="ranges">
@@ -13,24 +13,25 @@
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
 
                     <LockedPair 
-                        :x='{label: "Outer len x", min: ".2", max: "20", value: sp.lenOuter.x,  step: ".1" }'
-                        :y='{label: "Outer len y", min: ".2", max: "20", value: sp.lenOuter.y,  step: ".1" }'
+                        :x='{label: "Outer len x", min: ".001", max: "20", value: sp.lenOuter.x,  step: ".1" }'
+                        :y='{label: "Outer len y", min: ".001", max: "20", value: sp.lenOuter.y,  step: ".1" }'
                         v-model="sp.lenOuter"
                     />
     
                     <LockedPair 
-                        :x='{label: "Inner len x", min: ".2", max: "20", value: sp.lenInner.x,  step: ".1" }'
-                        :y='{label: "Inner len y", min: ".2", max: "20", value: sp.lenInner.y,  step: ".1" }'
+                        :x='{label: "Inner len x", min: ".001", max: "20", value: sp.lenInner.x,  step: ".1" }'
+                        :y='{label: "Inner len y", min: ".001", max: "20", value: sp.lenInner.y,  step: ".1" }'
                         v-model="sp.lenInner"
                     />
 
                     <br>
-                    <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" />
-                    <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" />
+                    <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" step=".1" />
+                    <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" step=".1" />
+                    <InputRange label="Scale" v-model="sp.sceneScale" min=".01" max="4" step=".01" />
                 </div>
                 <div class="actions">
                     <label><input type="checkbox" @click="toggleLines">Lines</label>
-                    <input @click="actionSave" type="button" value="Save">
+                    <input @click="saveShape" type="button" value="Save">
                 </div>
             </div>
         </div>
@@ -44,7 +45,6 @@
                     <path :d="generate(shape).d" />
                     <circle class="origin" :cx="data.cx" :cy="data.cy" r=".3px"></circle>
                 </svg>
-
             </div>
         </div>
     </div>
@@ -53,87 +53,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { ref, reactive, computed } from '@vue/composition-api';
-import * as types from "./types";
-import { generate } from './shape-generator';
+import * as types from "./business/types";
+import { generate } from './business/shape-generator';
+import { initShapes } from './business/shapes-collection';
 import InputRange from './components/InputRange.vue';
-import LockButton from './components/LockButton.vue';
 import LockedPair from './components/LockedPair.vue';
-
-function initShapes(sp: types.ShapeParams) {
-    const shapeLines = [
-        '{"nOuter":3,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":3,"nInner":2,"lenOuter":{"x":"7.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":4,"nInner":2,"lenOuter":{"x":"0.2","y":"1.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":4,"nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"6","nInner":2,"lenOuter":{"x":"3.2","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"10","nInner":"6","lenOuter":{"x":"3.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"0.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"8","nInner":"8","lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":"4.2","y":"4.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"6","nInner":"3","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"4.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"3.2"},"lenInner":{"x":"2.2","y":"6.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"16","nInner":"2","lenOuter":{"x":"4.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"8.2","y":"5.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.2","y":"6.2"},"lenInner":{"x":5.2,"y":"0.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"4","nInner":"6","lenOuter":{"x":"4.2","y":"1.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"3.2","y":2.2},"lenInner":{"x":"7.2","y":"2.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"6.2","y":"6.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"6","nInner":2,"lenOuter":{"x":"4.5","y":"3.2"},"lenInner":{"x":"5.2","y":"5.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.3","y":"5.7"},"lenInner":{"x":"4.3","y":"2.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"4.3","y":"6.3"},"lenInner":{"x":"5.3","y":"0.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":5,"nInner":2,"lenOuter":{"x":"2.4","y":"5.1"},"lenInner":{"x":"4.7","y":"2.6"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"8","nInner":2,"lenOuter":{"x":"6.2","y":"4.5"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"4","nInner":"8","lenOuter":{"x":"4.2","y":"5.3"},"lenInner":{"x":"0.2","y":"5.2"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"3","nInner":"8","lenOuter":{"x":"4.9","y":"5.7"},"lenInner":{"x":"7.8","y":"3"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"3","nInner":"2","lenOuter":{"x":"6.7","y":"5.2"},"lenInner":{"x":"4.2","y":"5.9"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"5","nInner":"6","lenOuter":{"x":"5.9","y":"4.6"},"lenInner":{"x":"2.3","y":"6.9"},"offset":{"x":7,"y":7}}',
-        '{"nOuter":"18","nInner":2,"lenOuter":{"x":"5","y":"5.6"},"lenInner":{"x":"2.8","y":"6.1"},"offset":{"x":"7","y":"7"}}',
-    ];
-
-    let shapes = ref<types.ShapeParams[]>([]);
-    shapeLines.forEach(_ => {
-        try {
-            shapes.value.push(JSON.parse(_));
-        } catch (error) {
-            console.log(`Bad shape: "${_}"`);
-        }
-    });
-
-    function actionSave() {
-        shapes.value.push(JSON.parse(JSON.stringify(sp)));
-    }
-
-    function applyShape(shape: types.ShapeParams) {
-        console.log('shape', shape);
-        //sp = reactive({...shape});
-        //sp = reactive(JSON.parse(JSON.stringify(shape)));
-        let upd = JSON.parse(JSON.stringify(shape));
-        sp.nOuter= upd.nOuter;
-        sp.nInner= upd.nInner;
-        sp.lenOuter = upd.lenOuter;
-        sp.lenInner = upd.lenInner;
-        sp.offset= upd.offset;
-    }
-
-    return {
-        actionSave,
-        applyShape,
-        shapes
-    };
-} //initShapes()
 
 export default Vue.extend({
     name: "App",
-    components: { InputRange, LockButton, LockedPair },
+    components: { InputRange, LockedPair },
     setup() {
         const initialParams: types.ShapeParams = {
             nOuter: 5,
@@ -141,6 +69,7 @@ export default Vue.extend({
             lenOuter: { x: 2.2, y: 2.2 },
             lenInner: { x: 5.2, y: 5.2 },
             offset: { x: 7, y: 7 },
+            sceneScale: 1,
         };
 
         let sp = reactive(initialParams);
@@ -161,7 +90,7 @@ export default Vue.extend({
             };
         });
 
-        let { applyShape, actionSave, shapes } = initShapes(sp);
+        let { applyShape, saveShape, shapes } = initShapes(sp);
 
         const showLines = ref(false);
         const toggleLines = () => { showLines.value = !showLines.value; };
@@ -170,7 +99,7 @@ export default Vue.extend({
             sp,
             data,
             helpers,
-            actionSave,
+            saveShape,
             applyShape,
             showLines,
             toggleLines,
@@ -227,6 +156,7 @@ body {
     .actions {
         display: flex;
         justify-content: flex-end;
+        font-size: .7rem;
 
         & > *:first-child {
             flex-grow: 1;
@@ -249,18 +179,18 @@ $canvas-bkg: hsl(208, 100%, 95%);
 
     .helper-out-lines {
         stroke: rgba(153, 0, 255, 0.4);
-        stroke-width: .1;
+        stroke-width: .07;
     }
 
     .helper-inn-lines {
         stroke: rgba(0, 76, 255, 0.4);
-        stroke-width: .1;
+        stroke-width: .07;
     }
 
     .origin {
         fill: none;
         stroke: rgba(255, 0, 0, 0.4);
-        stroke-width: .1;
+        stroke-width: .07;
     }
 }
 

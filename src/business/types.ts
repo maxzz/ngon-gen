@@ -9,4 +9,5 @@ export type ShapeParams = {
     offset: LocalPoint;
     nOuter: number;
     nInner: number;
+    sceneScale: number;
 };
