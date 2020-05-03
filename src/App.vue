@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="output">
-            <textarea cols="30" rows="10" :value='outputSvgText'></textarea>
+            <textarea cols="30" rows="7" :value='outputSvgText'></textarea>
             <input @click="downloadSvg" type="button" value="Download">
         </div>
         <div class="previews">
@@ -44,7 +44,6 @@
                 <div class="preview-id">{{index + 1}}</div>
                 <svg viewBox="0 0 14 14" class="small-canvas">
                     <path :d="generate(shape).d" />
-                    <circle class="origin" :cx="data.cx" :cy="data.cy" r=".3px"></circle>
                 </svg>
             </div>
         </div>
@@ -166,11 +165,15 @@ body {
 
     .actions {
         display: flex;
-        justify-content: flex-end;
-        font-size: .7rem;
 
         & > *:first-child {
             flex-grow: 1;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            font-size: .7rem;
         }
     }
 }
@@ -231,13 +234,24 @@ $small-canvas-cell-size: 64px;
     }
 }
 
-.output textarea {
-    width: 100%;
-    padding: 0;
-    background-color: hsl(0, 0%, 99%);
-    resize: vertical;
+.output {
+    position: relative;
 
-    border: none;
-    font-size: .9em;
+    textarea {
+        width: 100%;
+        padding: 0;
+        background-color: hsl(0, 0%, 99%);
+        resize: vertical;
+
+        border: none;
+        font-size: .9em;
+    }
+
+    input {
+        position: absolute;
+        right: 2px;
+        bottom: 20px;
+    }
 }
+
 </style>
