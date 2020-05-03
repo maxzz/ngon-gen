@@ -2,12 +2,23 @@ import { ref } from '@vue/composition-api';
 import * as types from "./types";
 import { shapeLines as defaultShapes } from './def-shapes';
 
+export function uniqueId(v?: number): string {
+    return (v || Date.now()).toString(36); // v is for balk generation within 1ms.
+}
+
 export function initShapes(sp: types.ShapeParams) {
     let shapes = ref<types.ShapeParams[]>([]);
 
+    let initSeed = Date.now();
     defaultShapes.forEach(_ => {
         try {
-            shapes.value.push(JSON.parse(_));
+            let newShape = JSON.parse(_);
+
+            // defaults for missing keys
+            !newShape.id && (newShape.id = uniqueId(initSeed++));
+            !newShape.sceneScale && (newShape.sceneScale = 1);
+
+            shapes.value.push(newShape);
         } catch (error) {
             console.log(`Bad shape: "${_}"`);
         }
@@ -19,20 +30,10 @@ export function initShapes(sp: types.ShapeParams) {
 
     function applyShape(shape: types.ShapeParams) {
         let upd = JSON.parse(JSON.stringify(shape)) as types.ShapeParams;
-
-        // defaults for missing
-        !upd.sceneScale && (upd.sceneScale = 1);
         
         for (let [key, val] of Object.entries(upd)) {
             (sp as any)[key] = val;
         }
-
-        // sp.nOuter= upd.nOuter;
-        // sp.nInner= upd.nInner;
-        // sp.lenOuter = upd.lenOuter;
-        // sp.lenInner = upd.lenInner;
-        // sp.offset = upd.offset;
-        // sp.sceneScale = upd.sceneScale;
     }
 
     return {

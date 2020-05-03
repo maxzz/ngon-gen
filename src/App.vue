@@ -40,14 +40,14 @@
             <textarea cols="30" rows="7" :value='outputSvgText'></textarea>
             <input @click="downloadSvg" type="button" value="Download">
         </div>
-        <div class="previews">
-            <div v-for="(shape, index) of shapes" :key=index @click="applyShape(shape)" class="preview">
+        <Draggable class="previews" v-model="shapes" @start="drag=true" @end="drag=false">
+            <div v-for="(shape, index) of shapes" :key="shape.id" @click="applyShape(shape)" class="preview">
                 <div class="preview-id">{{index + 1}}</div>
                 <svg viewBox="0 0 14 14" class="small-canvas">
                     <path :d="generate(shape).d" />
                 </svg>
             </div>
-        </div>
+        </Draggable>
     </div>
 </template>
 
@@ -56,14 +56,15 @@ import Vue from "vue";
 import { ref, reactive, computed } from '@vue/composition-api';
 import * as types from "./business/types";
 import { generate } from './business/shape-generator';
-import { initShapes } from './business/shapes-collection';
+import { initShapes, uniqueId } from './business/shapes-collection';
 import download from 'downloadjs';
 import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
+import Draggable from 'vuedraggable';
 
 export default Vue.extend({
     name: "App",
-    components: { InputRange, LockedPair },
+    components: { InputRange, LockedPair, Draggable },
     setup() {
         const initialParams: types.ShapeParams = {
             nOuter: 5,
@@ -72,6 +73,7 @@ export default Vue.extend({
             lenInner: { x: 5.2, y: 5.2 },
             offset: { x: 7, y: 7 },
             sceneScale: 1,
+            id: uniqueId()
         };
 
         let sp = reactive(initialParams);
