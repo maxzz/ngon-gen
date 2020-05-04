@@ -24,6 +24,7 @@ export function generate(p: types.ShapeParams) {
         nOuter: +p.nOuter,
         nInner: +p.nInner,
         sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
+        id: p.id
     };
 
     // generate points
