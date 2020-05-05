@@ -12,7 +12,7 @@
                     <InputRange label="# outer" v-model="sp.nOuter" min="2" max="70" />
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
 
-                    <Range />
+                    <Range v-model="sp.nInner" min="1" max="30" />
 
                     <LockedPair 
                         :x='{label: "Outer len x", min: ".001", max: "20", value: sp.lenOuter.x,  step: ".1" }'

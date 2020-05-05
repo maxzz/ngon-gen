@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label>
+        <label class="input-range">
             <input
                 class="uk-range"
                 type="range"
@@ -46,12 +46,17 @@ export default Vue.extend({
 @import '../scss/mixins-theme.scss';
 @import '../scss/form-range.scss';
 
-label {
+.input-range {
     display: flex;
     align-items: center;
     font-size: .7em;
     line-height: 1.6em;
     margin: .2em;
+
+    input {
+        width: 10em;
+        padding-right: .4em;
+    }
 
     $demed-color: #838383;
 

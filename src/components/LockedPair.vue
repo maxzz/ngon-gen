@@ -16,8 +16,7 @@ function setupOutside(props: any, { emit }: {emit: (event: string, ...args: any[
 
     const locked = ref(false);
 
-    watch(locked, () => {
-        emit('input', { x: props.value.x, y: props.value.x })})
+    watch(locked, () => emit('input', { x: props.value.x, y: props.value.x }));
     
     function onInputX(v: number) {
         if (locked.value) {
