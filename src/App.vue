@@ -12,6 +12,8 @@
                     <InputRange label="# outer" v-model="sp.nOuter" min="2" max="70" />
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
 
+                    <Range />
+
                     <LockedPair 
                         :x='{label: "Outer len x", min: ".001", max: "20", value: sp.lenOuter.x,  step: ".1" }'
                         :y='{label: "Outer len y", min: ".001", max: "20", value: sp.lenOuter.y,  step: ".1" }'
@@ -58,13 +60,14 @@ import * as types from "./business/types";
 import { generate } from './business/shape-generator';
 import { initShapes, uniqueId } from './business/shapes-collection';
 import download from 'downloadjs';
+import Range from './components/Range.vue';
 import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import Draggable from 'vuedraggable';
 
 export default Vue.extend({
     name: "App",
-    components: { InputRange, LockedPair, Draggable },
+    components: { Range, InputRange, LockedPair, Draggable },
     setup() {
         const initialParams: types.ShapeParams = {
             nOuter: 5,
