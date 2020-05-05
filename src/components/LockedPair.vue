@@ -12,11 +12,50 @@ import InputRange from './InputRange.vue';
 import LockButton from './LockButton.vue';
 import { ref, reactive, watch } from '@vue/composition-api';
 
+function setupOutside(props: any, { emit }: {emit: (event: string, ...args: any[]) => void } ) {
+
+    const locked = ref(false);
+
+    watch(locked, () => {
+        emit('input', { x: props.value.x, y: props.value.x })})
+    
+    function onInputX(v: number) {
+        if (locked.value) {
+            emit('input', { x: v, y: v });
+        } else {
+            emit('input', { x: v, y: props.value.y });
+        }
+    }
+
+    function onInputY(v: number) {
+        if (locked.value) {
+            emit('input', { x: v, y: v });
+        } else {
+            emit('input', { x: props.value.x, y: v });
+        }
+    }
+
+    return {
+        locked,
+        onInputX,
+        onInputY,
+    };
+}    
+
+
 export default Vue.extend({
     components: { InputRange, LockButton },
     inheritAttrs: false,
     props: ['x', 'y', 'value'],
-    setup(props: any, { emit }) {
+
+    setup(props: any, ...rest) {
+        return {
+            ...setupOutside(props, ...rest)
+        };
+    }
+
+
+/*     setup(props: any, { emit }) {
 
         const locked = ref(false);
 
@@ -44,7 +83,8 @@ export default Vue.extend({
             onInputX,
             onInputY,
         };
-    }    
+    }
+ */
 });
 </script>
 

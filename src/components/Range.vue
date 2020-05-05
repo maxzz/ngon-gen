@@ -22,13 +22,10 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-$form-range-thumb-height: 13px;
-
+<style lang="scss">
 @import '../scss/variables.scss';
 @import '../scss/tm-theme.scss';
 @import '../scss/variables-theme.scss';
 @import '../scss/mixins-theme.scss';
 @import '../scss/form-range.scss';
-
 </style>
