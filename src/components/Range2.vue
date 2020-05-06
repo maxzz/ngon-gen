@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ref, watch, defineComponent, Ref } from '@vue/composition-api';
+import { defineComponent, Ref, watch  } from '@vue/composition-api';
 import Range from './Range.vue';
 
 export default defineComponent({
@@ -21,42 +21,18 @@ export default defineComponent({
     },
     setup(props: {locked: Ref<boolean>, value: { x: number, y: number }, x: Ref<Object>, y: Ref<Object>}, { emit }) {
 
-        console.log('props', JSON.stringify(props, null, 4), 'value', Object.keys(props.value));
-
         let shift = 0;
 
         watch(() => props.locked, () => {
-            //console.log('watch locked', { x: props.value.x, y: props.value.x, l: props.locked });
-
-            //emitValue();
             shift = props.value.x - props.value.y;
         });
 
-        function emitValue() {
-            let x = props.value.x;
-            let y = props.value.y;
-            if (props.locked) {
-                y = props.value.x + shift;
-            }
-            emit('input', { x, y });
-        }
-        
         function onInputX(v: number) {
-            if (props.locked) {
-                //console.log('x', JSON.stringify(props, null, 4), 'value', v);
-                emit('input', { x: v, y: v - shift });
-            } else {
-                //console.log('aa');
-                emit('input', { x: v, y: props.value.y });
-            }
+            emit('input', props.locked ? { x: v, y: v - shift } : { x: v, y: props.value.y });
         }
 
         function onInputY(v: number) {
-            if (props.locked) {
-                emit('input', { x: v + shift, y: v });
-            } else {
-                emit('input', { x: props.value.x, y: v });
-            }
+            emit('input', props.locked ? { x: v + shift, y: v } : { x: props.value.x, y: v });
         }
 
         return {
