@@ -9,6 +9,7 @@
 import Vue from "vue";
 import { defineComponent, Ref, watch  } from '@vue/composition-api';
 import Range from './Range.vue';
+import { rnd2 } from '../business/shape-generator';
 
 export default defineComponent({
     inheritAttrs: false,
@@ -24,7 +25,7 @@ export default defineComponent({
         let shift = 0;
 
         watch(() => props.locked, () => {
-            shift = props.value.x - props.value.y;
+            shift = rnd2(props.value.x - props.value.y);
         });
 
         function onInputX(v: number) {

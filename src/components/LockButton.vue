@@ -39,7 +39,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .lock-btn {
         display: flex;
         justify-content: center;

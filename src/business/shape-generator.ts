@@ -10,7 +10,7 @@ function ngon(n: number): [number, number][] {
     return polygon;
 }
 
-function rnd2(n: number): number {
+export function rnd2(n: number): number {
     return Math.round(n * 100) / 100;
 }
 

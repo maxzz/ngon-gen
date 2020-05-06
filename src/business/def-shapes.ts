@@ -39,7 +39,8 @@ export const shapeLines = [
     '{"nOuter":"11","nInner":2,"lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"id":"k9qxnfax","sceneScale":1}',
     '{"nOuter":"11","nInner":"5","lenOuter":{"x":2.2,"y":2.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"id":"k9qxnfay","sceneScale":1}',
     '{"nOuter":"10","nInner":"6","lenOuter":{"x":"3.2","y":"0.2"},"lenInner":{"x":"3.2","y":"4.2"},"offset":{"x":7,"y":7},"id":"k9qxnfb0","sceneScale":1}',
-    '{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"id":"k9qxnfba","sceneScale":1}'    
+    '{"nOuter":"11","nInner":"2","lenOuter":{"x":"5.2","y":"0.2"},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"id":"k9qxnfba","sceneScale":1}',
+    '{"nOuter":3,"nInner":2,"lenOuter":{"x":-1.9,"y":-1.9},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"sceneScale":1,"id":"k9vajusz"}',
 ];
 
 // original unsorted
