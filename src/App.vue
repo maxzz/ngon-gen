@@ -18,7 +18,10 @@
                         :x='{label: "Outer len x", min: ".001", max: "20", value: sp.lenOuter.x,  step: ".1" }'
                         :y='{label: "Outer len y", min: ".001", max: "20", value: sp.lenOuter.y,  step: ".1" }'
                         v-model="sp.lenOuter"
+                        :locked="locks.outer"
                     />
+
+                    <LockButton v-model="locks.outer"/>
 
                     <LockedPair 
                         :x='{label: "Outer len x", min: ".001", max: "20", value: sp.lenOuter.x,  step: ".1" }'
@@ -70,11 +73,12 @@ import Range from './components/Range.vue';
 import Range2 from './components/Range2.vue';
 import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
+import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
 
 export default Vue.extend({
     name: "App",
-    components: { Range, Range2, InputRange, LockedPair, Draggable },
+    components: { Range, Range2, LockButton, InputRange, LockedPair, Draggable },
     setup() {
         const initialParams: types.ShapeParams = {
             nOuter: 5,
@@ -86,8 +90,8 @@ export default Vue.extend({
             id: uniqueId()
         };
 
-        let sp = reactive(initialParams);
-        
+        const sp = reactive(initialParams);
+
         let data = computed(() => generate(sp));
         let helpers = computed(() => {
             const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${data.value.center.x},${data.value.center.y}L${_[0]},${_[1]}`);
@@ -116,8 +120,11 @@ export default Vue.extend({
             download(outputSvgText.value, 'generated.svg', 'text/plain');
         }
 
+        const locks = reactive({outer: false, inner: false});
+
         return {
             sp,
+            locks,
             data,
             helpers,
             saveShape,

@@ -14,6 +14,7 @@ export default defineComponent({
     inheritAttrs: false,
     components: { Range },
     props: {
+        locked: Boolean,
         value: Object,
         x: Object,
         y: Object,
@@ -22,24 +23,24 @@ export default defineComponent({
 
         console.log('props', JSON.stringify(props, null, 4), 'value', Object.keys(props.value));
 
-        const locked = ref(!!props.locked);
-
-        watch(locked, () => {
-            console.log('watch locked', { x: props.value.x, y: props.value.x });
+        watch(() => props.locked, () => {
+            console.log('watch locked', { x: props.value.x, y: props.value.x, l: props.locked });
 
             emit('input', { x: props.value.x, y: props.value.x });
         });
         
         function onInputX(v: number) {
-            if (locked.value) {
+            if (props.locked) {
+                //console.log('x', JSON.stringify(props, null, 4), 'value', v);
                 emit('input', { x: v, y: v });
             } else {
+                //console.log('aa');
                 emit('input', { x: v, y: props.value.y });
             }
         }
 
         function onInputY(v: number) {
-            if (locked.value) {
+            if (props.locked) {
                 emit('input', { x: v, y: v });
             } else {
                 emit('input', { x: props.value.x, y: v });
