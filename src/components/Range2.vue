@@ -23,16 +23,28 @@ export default defineComponent({
 
         console.log('props', JSON.stringify(props, null, 4), 'value', Object.keys(props.value));
 
-        watch(() => props.locked, () => {
-            console.log('watch locked', { x: props.value.x, y: props.value.x, l: props.locked });
+        let shift = 0;
 
-            emit('input', { x: props.value.x, y: props.value.x });
+        watch(() => props.locked, () => {
+            //console.log('watch locked', { x: props.value.x, y: props.value.x, l: props.locked });
+
+            //emitValue();
+            shift = props.value.x - props.value.y;
         });
+
+        function emitValue() {
+            let x = props.value.x;
+            let y = props.value.y;
+            if (props.locked) {
+                y = props.value.x + shift;
+            }
+            emit('input', { x, y });
+        }
         
         function onInputX(v: number) {
             if (props.locked) {
                 //console.log('x', JSON.stringify(props, null, 4), 'value', v);
-                emit('input', { x: v, y: v });
+                emit('input', { x: v, y: v - shift });
             } else {
                 //console.log('aa');
                 emit('input', { x: v, y: props.value.y });
@@ -41,7 +53,7 @@ export default defineComponent({
 
         function onInputY(v: number) {
             if (props.locked) {
-                emit('input', { x: v, y: v });
+                emit('input', { x: v + shift, y: v });
             } else {
                 emit('input', { x: props.value.x, y: v });
             }
