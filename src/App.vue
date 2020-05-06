@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div class="app-wrap debug_">
         <div class="main">
             <svg viewBox="0 0 14 14" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="data.d" />
@@ -7,7 +7,7 @@
                 <path v-if="showLines" class="helper-inn-lines" :d="helpers.innLines" />
                 <circle v-if="showLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3"></circle>
             </svg>
-            <div class="right">
+            <div class="right debug-grid-16_">
                 <div class="ranges">
                     <InputRange label="# outer" v-model="sp.nOuter" min="2" max="70" />
                     <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
@@ -127,23 +127,28 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-body {
+//@import '../src/scss/debug.scss';
+
+*, *::before, *::after {
     margin: 0;
     box-sizing: border-box;
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    background-color: rgb(235, 235, 235);
 }
 
-#app {
+body {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    background-color: #ebebeb;
+}
+
+.app-wrap {
     margin: 1em auto;
-    max-width: 90vw;
+    max-width: 96vw;
     display: grid;
     grid-template-rows: 1fr auto;
     row-gap: .4em;
 
     background-color: #fff;
-    // border: 1px solid rgb(243, 243, 243);
-    // border-radius: 5px;
+    border: 1px solid #f7f7f7;
+    border-radius: 3px;
     padding: .4em;
     box-shadow: 1px 1px 1px #999;
 }
@@ -172,14 +177,16 @@ body {
     .actions {
         display: flex;
 
-        & > *:first-child {
-            flex-grow: 1;
-        }
-
         label {
+            flex-grow: 1;
+
             display: flex;
             align-items: center;
             font-size: .7rem;
+
+            & > *:first-child {
+                margin: 0 .2rem 0 0;
+            }
         }
     }
 }
