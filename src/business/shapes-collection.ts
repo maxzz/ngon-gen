@@ -12,12 +12,22 @@ export function initShapes(sp: types.ShapeParams) {
     let initSeed = Date.now();
     defaultShapes.forEach(_ => {
         try {
-            let newShape = JSON.parse(_);
+            let newShape = JSON.parse(_) as types.ShapeParams;
 
             // defaults for missing keys
             !newShape.id && (newShape.id = uniqueId(initSeed++));
             !newShape.sceneScale && (newShape.sceneScale = 1);
 
+            if (newShape.lenInner) { // conver string to numbers
+                newShape.lenInner.x = +newShape.lenInner.x;
+                newShape.lenInner.y = +newShape.lenInner.y;
+            }
+
+            if (newShape.lenOuter) { // conver string to numbers
+                newShape.lenOuter.x = +newShape.lenOuter.x;
+                newShape.lenOuter.y = +newShape.lenOuter.y;
+            }
+            
             shapes.value.push(newShape);
         } catch (error) {
             console.log(`Bad shape: "${_}"`);

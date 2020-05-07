@@ -9,27 +9,22 @@
             </svg>
             <div class="right debug-grid-16_">
                 <div class="ranges">
-                    <InputRange label="# outer" v-model="sp.nOuter" min="2" max="70" />
-                    <InputRange label="# inner" v-model="sp.nInner" min="1" max="30" />
-
-<br>
-<br>
-
                     <div class="range-group">
-                        <div><Range v-model="sp.nOuter" min="2" max="70" /></div>
+                        <Range v-model="sp.nOuter" min="2" max="70" />
                         <div class="range-spacer"></div>
-                        <div class="range-value">{{sp.nOuter}}</div>
+
+                        <ValueInput v-model="sp.nOuter" />
                         <div class="range-label"># outer</div>
                     </div>
 
                     <div class="range-group">
-                        <div><Range v-model="sp.nInner" min="1" max="30" /></div>
+                        <Range v-model="sp.nInner" min="1" max="30" />
                         <div class="range-spacer"></div>
-                        <div class="range-value">{{sp.nInner}}</div>
+
+                        <ValueInput v-model="sp.nInner" />
                         <div class="range-label"># inner</div>
                     </div>
-<br>
-<br>
+
                     <div class="range-group-2">
                         <Range2
                             :x='{label: "Outer len x", min: "-20", max: "20", value: sp.lenOuter.x,  step: ".1" }'
@@ -39,14 +34,14 @@
                         />
                         <LockButton v-model="locks.outer" class="range-lock"/>
 
-                        <div class="range-value">{{sp.lenOuter.x}}</div>
+                        <ValueInput v-model="sp.lenOuter.x" />
                         <div class="range-label">Outer len x</div>
                         
-                        <div class="range-value">{{sp.lenOuter.y}}</div>
+                        <ValueInput v-model="sp.lenOuter.y" />
                         <div class="range-label">Outer len y</div>
                     </div>
 
-                    <!-- <LockedPair 
+                    <LockedPair 
                         :x='{label: "Outer len x", min: ".001", max: "20", value: sp.lenOuter.x,  step: ".1" }'
                         :y='{label: "Outer len y", min: ".001", max: "20", value: sp.lenOuter.y,  step: ".1" }'
                         v-model="sp.lenOuter"
@@ -58,10 +53,11 @@
                         v-model="sp.lenInner"
                     />
 
-                    <br>
+                    <!-- <br>
                     <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" step=".1" />
                     <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" step=".1" />
                     <InputRange label="Scale" v-model="sp.sceneScale" min=".01" max="4" step=".01" /> -->
+
                     <!-- <InputRange label="Stroke" v-model="sp.strokeWidth" min=".01" max="4" step=".01" /> -->
                 </div>
                 <div class="actions">
@@ -94,6 +90,7 @@ import { initShapes, uniqueId } from './business/shapes-collection';
 import download from 'downloadjs';
 import Range from './components/Range.vue';
 import Range2 from './components/Range2.vue';
+import ValueInput from './components/ValueInput.vue';
 import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
@@ -101,7 +98,7 @@ import Draggable from 'vuedraggable';
 
 export default Vue.extend({
     name: "App",
-    components: { Range, Range2, LockButton, InputRange, LockedPair, Draggable },
+    components: { Range, Range2, LockButton, ValueInput, InputRange, LockedPair, Draggable },
     setup() {
         const initialParams: types.ShapeParams = {
             nOuter: 5,
@@ -228,15 +225,21 @@ body {
     }
 }
 
-// .range-group, .range-group-2 {
-//     .uk-range {
-//         width: 10em;
-//     }
-// }
+.range-group, .range-group-2 {
+    .uk-range {
+        width: 10em;
+        height: 20px;
+    }
+}
 
 .range-group {
-    display: flex;
-    font-size: .8rem;
+    display: grid;
+    grid-template-columns: 130px 16px 48px 1fr;
+    grid-template-rows: 20px;
+    align-items: center;
+    column-gap: 2px;
+    font-size: .7rem;
+    margin-bottom: 2px;
 }
 
 .range-group-2 {
@@ -250,9 +253,9 @@ body {
     align-items: center;
     font-size: .7rem;
 
-    :first-child {
-        background-color: seagreen;
+    & > :first-child {
         grid-area: range-slider;
+        // background-color: seagreen;
 
         //display: grid;
         grid-template-columns: 1fr;
@@ -260,6 +263,8 @@ body {
 
     .range-lock {
         grid-area: lock;
+        align-self: center;
+        //background-color: red;
     }
 
     :nth-child(3) {
@@ -285,21 +290,16 @@ body {
 //     height: 16px;
 // }
 
-.range-lock {
-    // background-color: red;
-    align-self: center;
-}
-
 $demed-color: #838383;
 
-.range-value {
-    //background-color: rgba(229, 255, 0, 0.281);
-    min-width: 3em;
-    text-align: center;
-    border: 1px dotted $demed-color;
-    border-radius: 5px;
-    color: $demed-color;
-}
+// .range-value {
+//     background-color: rgba(229, 255, 0, 0.281);
+//     min-width: 3em;
+//     text-align: center;
+//     border: 1px dotted $demed-color;
+//     border-radius: 5px;
+//     color: $demed-color;
+// }
 
 // .range-label {
 //     background-color: gold;
