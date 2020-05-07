@@ -27,6 +27,12 @@ export function initShapes(sp: types.ShapeParams) {
                 newShape.lenOuter.x = +newShape.lenOuter.x;
                 newShape.lenOuter.y = +newShape.lenOuter.y;
             }
+
+            console.log('aa');
+            if (newShape.offset) { // conver string to numbers
+                newShape.offset.x = +newShape.offset.x;
+                newShape.offset.y = +newShape.offset.y;
+            }
             
             shapes.value.push(newShape);
         } catch (error) {

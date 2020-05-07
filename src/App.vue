@@ -41,22 +41,46 @@
                         <div class="range-label">Outer len y</div>
                     </div>
 
-                    <LockedPair 
-                        :x='{label: "Outer len x", min: ".001", max: "20", value: sp.lenOuter.x,  step: ".1" }'
-                        :y='{label: "Outer len y", min: ".001", max: "20", value: sp.lenOuter.y,  step: ".1" }'
-                        v-model="sp.lenOuter"
-                    />
-    
-                    <LockedPair 
-                        :x='{label: "Inner len x", min: ".001", max: "20", value: sp.lenInner.x,  step: ".1" }'
-                        :y='{label: "Inner len y", min: ".001", max: "20", value: sp.lenInner.y,  step: ".1" }'
-                        v-model="sp.lenInner"
-                    />
+                    <div class="range-group-2">
+                        <Range2
+                            :x='{label: "Inner len x", min: "-20", max: "20", value: sp.lenInner.x,  step: ".1" }'
+                            :y='{label: "Inner len y", min: "-20", max: "20", value: sp.lenInner.y,  step: ".1" }'
+                            v-model="sp.lenInner"
+                            :locked="locks.inner"
+                        />
+                        <LockButton v-model="locks.inner" class="range-lock"/>
 
-                    <!-- <br>
-                    <InputRange label="Offset x" v-model="sp.offset.x" min="2" max="20" step=".1" />
-                    <InputRange label="Offset y" v-model="sp.offset.y" min="2" max="20" step=".1" />
-                    <InputRange label="Scale" v-model="sp.sceneScale" min=".01" max="4" step=".01" /> -->
+                        <ValueInput v-model="sp.lenInner.x" />
+                        <div class="range-label">Inner len x</div>
+                        
+                        <ValueInput v-model="sp.lenInner.y" />
+                        <div class="range-label">Inner len y</div>
+                    </div>
+
+                    <br>
+                    <div class="range-group">
+                        <Range v-model="sp.offset.x" min="2" max="20" step=".1" />
+                        <div class="range-spacer"></div>
+
+                        <ValueInput v-model="sp.offset.x" />
+                        <div class="range-label">Offset X</div>
+                    </div>
+
+                    <div class="range-group">
+                        <Range v-model="sp.offset.y" min="2" max="20" step=".1" />
+                        <div class="range-spacer"></div>
+
+                        <ValueInput v-model="sp.offset.y" />
+                        <div class="range-label">Offset Y</div>
+                    </div>
+
+                    <div class="range-group">
+                        <Range v-model="sp.sceneScale" min=".01" max="4" step=".01" />
+                        <div class="range-spacer"></div>
+
+                        <ValueInput v-model="sp.sceneScale" />
+                        <div class="range-label">Scale</div>
+                    </div>
 
                     <!-- <InputRange label="Stroke" v-model="sp.strokeWidth" min=".01" max="4" step=".01" /> -->
                 </div>
@@ -230,41 +254,36 @@ body {
         width: 10em;
         height: 20px;
     }
-}
 
-.range-group {
     display: grid;
     grid-template-columns: 130px 16px 48px 1fr;
-    grid-template-rows: 20px;
     align-items: center;
-    column-gap: 2px;
+    gap: 2px;
+
     font-size: .7rem;
     margin-bottom: 2px;
 }
 
+.range-group {
+    grid-template-rows: 20px;
+}
+
 .range-group-2 {
-    display: grid;
-    grid-template-columns: 130px 16px 48px 1fr;
     grid-template-rows: repeat(2, 20px);
-    gap: 2px;
     grid-template-areas:
         "range-slider lock value-a label-a"
         "range-slider lock value-b label-b";
-    align-items: center;
-    font-size: .7rem;
+
+    border-top: 1px solid rgb(102, 102, 102);
+    padding-top: 2px;
 
     & > :first-child {
         grid-area: range-slider;
-        // background-color: seagreen;
-
-        //display: grid;
-        grid-template-columns: 1fr;
     }
 
     .range-lock {
         grid-area: lock;
         align-self: center;
-        //background-color: red;
     }
 
     :nth-child(3) {
@@ -283,28 +302,6 @@ body {
         grid-area: label-b;
     }
 }
-
-// .range-spacer {
-//     background-color: red;
-//     width: 16px;
-//     height: 16px;
-// }
-
-$demed-color: #838383;
-
-// .range-value {
-//     background-color: rgba(229, 255, 0, 0.281);
-//     min-width: 3em;
-//     text-align: center;
-//     border: 1px dotted $demed-color;
-//     border-radius: 5px;
-//     color: $demed-color;
-// }
-
-// .range-label {
-//     background-color: gold;
-//     width: 6em;
-// }
 
 $canvas-bkg: hsl(208, 100%, 95%);
 
