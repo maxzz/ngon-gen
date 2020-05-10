@@ -1,4 +1,5 @@
 import * as types from "./types";
+import { SCENE_SIZE } from './types';
 
 function ngon(n: number): [number, number][] {
     let polygon = new Array(n);
@@ -18,11 +19,12 @@ export function generate(p: types.ShapeParams) {
     //console.log('generate: sp', p);
 
     const sp: types.ShapeParams = {
+        nOuter: +p.nOuter,
+        nInner: +p.nInner,
         lenOuter: { x: +p.lenOuter.x, y: +p.lenOuter.y },
         lenInner: { x: +p.lenInner.x, y: +p.lenInner.y },
         offset: { x: +p.offset.x, y: +p.offset.y },
-        nOuter: +p.nOuter,
-        nInner: +p.nInner,
+        sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
         sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
         id: p.id
     };
@@ -61,8 +63,8 @@ export function generate(p: types.ShapeParams) {
             cy: ''+points[0][1],
         },
         center: {
-            x: 7,
-            y: 7,
+            x: SCENE_SIZE / 2,
+            y: SCENE_SIZE / 2,
         }
     };
 }

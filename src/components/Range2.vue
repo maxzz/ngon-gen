@@ -28,12 +28,18 @@ export default defineComponent({
             shift = rnd2(props.value.x - props.value.y);
         });
 
+        function emitValue(v: {x: number, y: number}) {
+            v.x = rnd2(v.x);
+            v.y = rnd2(v.y);
+            emit('input', v);
+        }
+
         function onInputX(v: number) {
-            emit('input', props.locked ? { x: v, y: v - shift } : { x: v, y: props.value.y });
+            emitValue(props.locked ? { x: v, y: v - shift } : { x: v, y: props.value.y });
         }
 
         function onInputY(v: number) {
-            emit('input', props.locked ? { x: v + shift, y: v } : { x: props.value.x, y: v });
+            emitValue(props.locked ? { x: v + shift, y: v } : { x: props.value.x, y: v });
         }
 
         return {

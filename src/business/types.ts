@@ -4,11 +4,14 @@ export type LocalPoint = {
 }
 
 export type ShapeParams = {
+    nOuter: number;
+    nInner: number;
     lenOuter: LocalPoint;
     lenInner: LocalPoint;
     offset: LocalPoint;
-    nOuter: number;
-    nInner: number;
+    sceneSize: LocalPoint;
     sceneScale: number;
     id: string;
-};
+}
+
+export const SCENE_SIZE = 14; // should be even integer

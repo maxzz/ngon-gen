@@ -1,7 +1,7 @@
 <template>
     <div class="app-wrap debug_">
         <div class="main">
-            <svg viewBox="0 0 14 14" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 24 24" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="data.d" />
                 <path v-if="showLines" class="helper-out-lines" :d="helpers.outLines" />
                 <path v-if="showLines" class="helper-inn-lines" :d="helpers.innLines" />
@@ -13,7 +13,7 @@
                         <Range v-model="sp.nOuter" min="2" max="70" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.nOuter" />
+                        <ValueInput v-model="sp.nOuter" min="2" max="70" />
                         <div class="range-label"># outer</div>
                     </div>
 
@@ -21,7 +21,7 @@
                         <Range v-model="sp.nInner" min="1" max="30" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.nInner" />
+                        <ValueInput v-model="sp.nInner" min="1" max="30" />
                         <div class="range-label"># inner</div>
                     </div>
 
@@ -34,10 +34,10 @@
                         />
                         <LockButton v-model="locks.outer" class="range-lock"/>
 
-                        <ValueInput v-model="sp.lenOuter.x" />
+                        <ValueInput v-model="sp.lenOuter.x" min="-20" max="20" step=".1" />
                         <div class="range-label">Outer len x</div>
                         
-                        <ValueInput v-model="sp.lenOuter.y" />
+                        <ValueInput v-model="sp.lenOuter.y" min="-20" max="20" step=".1" />
                         <div class="range-label">Outer len y</div>
                     </div>
 
@@ -50,10 +50,10 @@
                         />
                         <LockButton v-model="locks.inner" class="range-lock"/>
 
-                        <ValueInput v-model="sp.lenInner.x" />
+                        <ValueInput v-model="sp.lenInner.x" min="-20" max="20" step=".1" />
                         <div class="range-label">Inner len x</div>
                         
-                        <ValueInput v-model="sp.lenInner.y" />
+                        <ValueInput v-model="sp.lenInner.y" min="-20" max="20" step=".1" />
                         <div class="range-label">Inner len y</div>
                     </div>
 
@@ -62,7 +62,7 @@
                         <Range v-model="sp.offset.x" min="2" max="20" step=".1" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.offset.x" />
+                        <ValueInput v-model="sp.offset.x" min="2" max="20" step=".1" />
                         <div class="range-label">Offset X</div>
                     </div>
 
@@ -70,7 +70,7 @@
                         <Range v-model="sp.offset.y" min="2" max="20" step=".1" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.offset.y" />
+                        <ValueInput v-model="sp.offset.y" min="2" max="20" step=".1" />
                         <div class="range-label">Offset Y</div>
                     </div>
 
@@ -78,7 +78,7 @@
                         <Range v-model="sp.sceneScale" min=".01" max="4" step=".01" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.sceneScale" />
+                        <ValueInput v-model="sp.sceneScale" min=".01" max="4" step=".01" />
                         <div class="range-label">Scale</div>
                     </div>
 
@@ -107,7 +107,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ref, reactive, computed } from '@vue/composition-api';
+import { ref, reactive, computed, defineComponent } from '@vue/composition-api';
 import * as types from "./business/types";
 import { generate } from './business/shape-generator';
 import { initShapes, uniqueId } from './business/shapes-collection';
@@ -119,8 +119,9 @@ import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
+import { SCENE_SIZE } from './business/types';
 
-export default Vue.extend({
+export default defineComponent({
     name: "App",
     components: { Range, Range2, LockButton, ValueInput, InputRange, LockedPair, Draggable },
     setup() {
@@ -130,6 +131,7 @@ export default Vue.extend({
             lenOuter: { x: 2.2, y: 2.2 },
             lenInner: { x: 5.2, y: 5.2 },
             offset: { x: 7, y: 7 },
+            sceneSize: {x: SCENE_SIZE, y: SCENE_SIZE },
             sceneScale: 1,
             id: uniqueId()
         };
@@ -215,13 +217,13 @@ body {
     color: white;
     display: grid;
     column-gap: .4em;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto;
 }
 
 .right {
     display: grid;
     grid-template-rows: 1fr auto;
-
+    width: 280px;
     user-select: none;
     background-color: hsl(261, 100%, 10%);
     padding: .4em;
@@ -262,6 +264,10 @@ body {
 
     font-size: .7rem;
     margin-bottom: 2px;
+
+    .range-label {
+        padding-left: .4em;
+    }
 }
 
 .range-group {

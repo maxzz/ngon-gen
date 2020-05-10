@@ -5,6 +5,7 @@
         v-bind="$attrs"
         v-bind:value="value"
         v-on:input="$emit('input', rnd2(+$event.target.value))"
+        tabindex="-1"
     />
 </template>
 
