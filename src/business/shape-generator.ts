@@ -1,5 +1,5 @@
 import * as types from "./types";
-import { SCENE_SIZE } from './types';
+import { SCENE_SIZE, checkNumbers } from './types';
 
 function ngon(n: number): [number, number][] {
     let polygon = new Array(n);
@@ -15,37 +15,26 @@ export function rnd2(n: number): number {
     return Math.round(n * 100) / 100;
 }
 
-export function generate(p: types.ShapeParams) {
-    //console.log('generate: sp', p);
-
-    const sp: types.ShapeParams = {
-        nOuter: +p.nOuter,
-        nInner: +p.nInner,
-        lenOuter: { x: +p.lenOuter.x, y: +p.lenOuter.y },
-        lenInner: { x: +p.lenInner.x, y: +p.lenInner.y },
-        offset: { x: +p.offset.x, y: +p.offset.y },
-        sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
-        sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
-        id: p.id
-    };
+export function generate(params: types.ShapeParams) {
+    const p: types.ShapeParams = checkNumbers(params);
 
     // generate points
-    let points = ngon(sp.nOuter * sp.nInner);
+    let points = ngon(p.nOuter * p.nInner);
 
     // scale move
     points = points.map((_, index) => {
-        return index % sp.nInner === 0 
-            ? [ _[0] * sp.lenInner.x, _[1] * sp.lenInner.y ] 
-            : [ _[0] * sp.lenOuter.x, _[1] * sp.lenOuter.y ];
+        return index % p.nInner === 0 
+            ? [ _[0] * p.lenInner.x, _[1] * p.lenInner.y ] 
+            : [ _[0] * p.lenOuter.x, _[1] * p.lenOuter.y ];
     });
 
     // scene scale
     points = points.map((_, index) => {
-        return [ _[0] * sp.sceneScale, _[1] * sp.sceneScale ];
+        return [ _[0] * p.sceneScale, _[1] * p.sceneScale ];
     });
 
     // offset
-    points = points.map(_ => [ _[0] + sp.offset.x, _[1] + sp.offset.y ]);
+    points = points.map(_ => [ _[0] + p.offset.x, _[1] + p.offset.y ]);
 
     // round
     points = points.map(_ => [ rnd2(_[0]), rnd2(_[1])]);
@@ -59,8 +48,8 @@ export function generate(p: types.ShapeParams) {
         d,
         points,
         start: {
-            cx: ''+points[0][0],
-            cy: ''+points[0][1],
+            cx: points[0][0],
+            cy: points[0][1],
         },
         center: {
             x: SCENE_SIZE / 2,

@@ -1,7 +1,7 @@
 <template>
     <div class="app-wrap debug_">
         <div class="main">
-            <svg viewBox="0 0 24 24" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
+            <svg :viewBox="`0 0 ${SCENE_SIZE} ${SCENE_SIZE}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="data.d" />
                 <path v-if="showLines" class="helper-out-lines" :d="helpers.outLines" />
                 <path v-if="showLines" class="helper-inn-lines" :d="helpers.innLines" />
@@ -110,7 +110,7 @@ import Vue from "vue";
 import { ref, reactive, computed, defineComponent } from '@vue/composition-api';
 import * as types from "./business/types";
 import { generate } from './business/shape-generator';
-import { initShapes, uniqueId } from './business/shapes-collection';
+import { initShapes } from './business/shapes-collection';
 import download from 'downloadjs';
 import Range from './components/Range.vue';
 import Range2 from './components/Range2.vue';
@@ -119,23 +119,12 @@ import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
-import { SCENE_SIZE } from './business/types';
+import { SCENE_SIZE, initialParams } from './business/types';
 
 export default defineComponent({
     name: "App",
     components: { Range, Range2, LockButton, ValueInput, InputRange, LockedPair, Draggable },
     setup() {
-        const initialParams: types.ShapeParams = {
-            nOuter: 5,
-            nInner: 2,
-            lenOuter: { x: 2.2, y: 2.2 },
-            lenInner: { x: 5.2, y: 5.2 },
-            offset: { x: 7, y: 7 },
-            sceneSize: {x: SCENE_SIZE, y: SCENE_SIZE },
-            sceneScale: 1,
-            id: uniqueId()
-        };
-
         const sp = reactive(initialParams);
 
         let data = computed(() => generate(sp));
@@ -180,7 +169,8 @@ export default defineComponent({
             outputSvgText,
             downloadSvg,
             generate,
-            shapes
+            shapes,
+            SCENE_SIZE
         };
     }
 });

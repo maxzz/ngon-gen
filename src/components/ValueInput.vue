@@ -86,7 +86,7 @@ $demed-color: #838383;
     border: 1px dotted $demed-color;
     border-radius: 3px;
     color: $demed-color;
-    padding: 2px;
+    padding: 1px;
 
     //background-color: rgba(0, 255, 98, 0.281);
     background-color: inherit;
