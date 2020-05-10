@@ -2,7 +2,7 @@
     <div class="app-wrap debug_">
         <div class="main">
             <svg :viewBox="`0 0 ${SCENE_SIZE} ${SCENE_SIZE}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
-                <path :d="data.d" />
+                <path :d="data.d" :style="{'stroke-width': strokeWidth}" />
                 <path v-if="showLines" class="helper-out-lines" :d="helpers.outLines" />
                 <path v-if="showLines" class="helper-inn-lines" :d="helpers.innLines" />
                 <circle v-if="showLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3"></circle>
@@ -14,7 +14,7 @@
                         <div class="range-spacer"></div>
 
                         <ValueInput v-model="sp.nOuter" min="2" max="70" />
-                        <div class="range-label"># outer</div>
+                        <div class="range-label">Outer #</div>
                     </div>
 
                     <div class="range-group">
@@ -22,7 +22,7 @@
                         <div class="range-spacer"></div>
 
                         <ValueInput v-model="sp.nInner" min="1" max="30" />
-                        <div class="range-label"># inner</div>
+                        <div class="range-label">Inner #</div>
                     </div>
 
                     <div class="range-group-2 range-separator">
@@ -79,6 +79,14 @@
 
                         <ValueInput v-model="sp.sceneScale" min=".01" max="4" step=".01" />
                         <div class="range-label">Scale</div>
+                    </div>
+
+                    <div class="range-group range-separator">
+                        <Range v-model="strokeWidth" min=".01" max="5" step=".01" />
+                        <div class="range-spacer"></div>
+
+                        <ValueInput v-model="strokeWidth" min=".01" max="5" step=".01" />
+                        <div class="range-label">Stroke width</div>
                     </div>
 
                     <!-- <InputRange label="Stroke" v-model="sp.strokeWidth" min=".01" max="4" step=".01" /> -->
@@ -156,10 +164,13 @@ export default defineComponent({
 
         const locks = reactive({outer: false, inner: false});
 
+        const strokeWidth = ref(.2);
+
         return {
             sp,
             locks,
             data,
+            strokeWidth,
             helpers,
             saveShape,
             applyShape,
