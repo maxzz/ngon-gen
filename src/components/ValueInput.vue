@@ -27,7 +27,7 @@ export default defineComponent({
         let max = attrs.max && +attrs.max;
         let cachedValue = 0;
 
-        function emitvalue(v: number) {
+        function emitValue(v: number) {
             v = rnd2(v);
             min && v < min && (v = min);
             max && v > max && (v = max);
@@ -35,7 +35,7 @@ export default defineComponent({
         }
 
         function editChange(event: Event) {
-            emitvalue(+(event.target as HTMLInputElement).value);
+            emitValue(+(event.target as HTMLInputElement).value);
         }
 
         function onFocus(event: Event) {
@@ -53,15 +53,13 @@ export default defineComponent({
         function onUp(event: KeyboardEvent) {
             let v = +(event.target as HTMLInputElement).value;
             v = event.ctrlKey ? v + 1 : v + step;
-            emitvalue(v);
-            console.log('up', v);
+            emitValue(v);
         }
 
         function onDown(event: KeyboardEvent) {
             let v = +(event.target as HTMLInputElement).value;
             v = event.ctrlKey ? v - 1 : v - step;
-            emitvalue(v);
-            console.log('down', v);
+            emitValue(v);
         }
 
         return {
@@ -86,7 +84,7 @@ $demed-color: #838383;
     border: 1px dotted $demed-color;
     border-radius: 3px;
     color: $demed-color;
-    padding: 1px;
+    padding: 3px;
 
     //background-color: rgba(0, 255, 98, 0.281);
     background-color: inherit;

@@ -25,7 +25,7 @@
                         <div class="range-label"># inner</div>
                     </div>
 
-                    <div class="range-group-2">
+                    <div class="range-group-2 range-separator">
                         <Range2
                             :x='{label: "Outer len x", min: "-20", max: "20", value: sp.lenOuter.x,  step: ".1" }'
                             :y='{label: "Outer len y", min: "-20", max: "20", value: sp.lenOuter.y,  step: ".1" }'
@@ -41,7 +41,7 @@
                         <div class="range-label">Outer len y</div>
                     </div>
 
-                    <div class="range-group-2">
+                    <div class="range-group-2 range-separator">
                         <Range2
                             :x='{label: "Inner len x", min: "-20", max: "20", value: sp.lenInner.x,  step: ".1" }'
                             :y='{label: "Inner len y", min: "-20", max: "20", value: sp.lenInner.y,  step: ".1" }'
@@ -57,8 +57,7 @@
                         <div class="range-label">Inner len y</div>
                     </div>
 
-                    <br>
-                    <div class="range-group">
+                    <div class="range-group range-separator">
                         <Range v-model="sp.offset.x" min="2" max="20" step=".1" />
                         <div class="range-spacer"></div>
 
@@ -241,10 +240,12 @@ body {
     }
 }
 
+$inputSpacing: 6px;
+
 .range-group, .range-group-2 {
     .uk-range {
         width: 10em;
-        height: 20px;
+        height: 21px;
     }
 
     display: grid;
@@ -253,7 +254,7 @@ body {
     gap: 2px;
 
     font-size: .7rem;
-    margin-bottom: 2px;
+    margin-bottom: $inputSpacing;
 
     .range-label {
         padding-left: .4em;
@@ -264,14 +265,17 @@ body {
     grid-template-rows: 20px;
 }
 
+.range-separator {
+    border-top: 1px solid rgb(102, 102, 102);
+    padding-top: $inputSpacing;
+}
+
 .range-group-2 {
     grid-template-rows: repeat(2, 20px);
+    row-gap: $inputSpacing;
     grid-template-areas:
         "range-slider lock value-a label-a"
         "range-slider lock value-b label-b";
-
-    border-top: 1px solid rgb(102, 102, 102);
-    padding-top: 2px;
 
     & > :first-child {
         grid-area: range-slider;

@@ -47,6 +47,7 @@ export const shapeLines = [
     '{"nOuter":30,"nInner":3,"lenOuter":{"x":-11.2,"y":-2.3999999999999986},"lenInner":{"x":2.3,"y":6.9},"offset":{"x":7,"y":7},"sceneScale":1}',
     '{"nOuter":4,"nInner":2,"lenOuter":{"x":-3.6,"y":1.8000000000000003},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"sceneScale":1}',
     '{"nOuter":2,"nInner":16,"lenOuter":{"x":-11.2,"y":-2.3999999999999986},"lenInner":{"x":-1.9,"y":9.9},"offset":{"x":7,"y":7},"sceneScale":0.54}',
+    '{"nOuter":8,"nInner":4,"lenOuter":{"x":-4.2,"y":-4.2},"lenInner":{"x":5.2,"y":5.2},"offset":{"x":7,"y":7},"sceneScale":1}',
 ];
 
 // original unsorted
