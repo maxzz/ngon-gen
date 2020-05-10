@@ -15,8 +15,8 @@ export function rnd2(n: number): number {
     return Math.round(n * 100) / 100;
 }
 
-export function generate(params: types.ShapeParams) {
-    const p: types.ShapeParams = checkNumbers(params);
+export function generate(params: types.ShapeNgon) {
+    const p: types.ShapeNgon = checkNumbers(params);
 
     // generate points
     let points = ngon(p.nOuter * p.nInner);

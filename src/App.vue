@@ -137,12 +137,8 @@ export default defineComponent({
         let helpers = computed(() => {
             const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${data.value.center.x},${data.value.center.y}L${_[0]},${_[1]}`);
 
-            let inn = data.value.points.filter((_, index) => index % sp.nInner !== 0);
-            let innLines = pointsToLines(inn);
-
-            let out = data.value.points.filter((_, index) => index % sp.nInner === 0);
-            let outLines = pointsToLines(out);
-
+            let innLines = pointsToLines(data.value.points.filter((_, index) => index % sp.nInner !== 0));
+            let outLines = pointsToLines(data.value.points.filter((_, index) => index % sp.nInner === 0));
             return {
                 innLines,
                 outLines
