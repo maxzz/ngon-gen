@@ -2,10 +2,10 @@
     <div class="app-wrap debug_">
         <div class="main">
             <svg :viewBox="`0 0 ${SCENE_SIZE} ${SCENE_SIZE}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
-                <path :d="data.d" :style="{'stroke-width': strokeWidth}" />
-                <path v-if="showLines" class="helper-out-lines" :d="helpers.outLines" />
-                <path v-if="showLines" class="helper-inn-lines" :d="helpers.innLines" />
-                <circle v-if="showLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3"></circle>
+                <path :d="data.d" :style="{'stroke-width': options.strokeWidth}" />
+                <path v-if="options.outerLines" class="helper-out-lines" :d="helpers.outLines" />
+                <path v-if="options.innerLines" class="helper-inn-lines" :d="helpers.innLines" />
+                <circle v-if="options.outerLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3"></circle>
             </svg>
             <div class="right debug-grid-16_">
                 <div class="ranges">
@@ -82,17 +82,16 @@
                     </div>
 
                     <div class="range-group range-separator">
-                        <Range v-model="strokeWidth" min=".01" max="5" step=".01" />
+                        <Range v-model="options.strokeWidth" min=".01" max="5" step=".01" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="strokeWidth" min=".01" max="5" step=".01" />
+                        <ValueInput v-model="options.strokeWidth" min=".01" max="5" step=".01" />
                         <div class="range-label">Stroke width</div>
                     </div>
-
-                    <!-- <InputRange label="Stroke" v-model="sp.strokeWidth" min=".01" max="4" step=".01" /> -->
                 </div>
                 <div class="actions">
-                    <label><input type="checkbox" @click="toggleLines">Lines</label>
+                    <label><input type="checkbox" @click="toggleOuterLines">Lines outer</label>
+                    <label><input type="checkbox" @click="toggleInnerLines">Lines inner</label>
                     <input @click="saveShape" type="button" value="Save">
                 </div>
             </div>
@@ -104,7 +103,7 @@
         <Draggable class="previews" v-model="shapes" @start="drag=true" @end="drag=false">
             <div v-for="(shape, index) of shapes" :key="shape.id" @click="applyShape(shape)" class="preview">
                 <div class="preview-id">{{index + 1}}</div>
-                <svg viewBox="0 0 14 14" class="small-canvas">
+                <svg class="small-canvas" viewBox="0 0 14 14">
                     <path :d="generate(shape).d" />
                 </svg>
             </div>
@@ -152,8 +151,14 @@ export default defineComponent({
 
         let { applyShape, saveShape, shapes } = initShapes(sp);
 
-        const showLines = ref(false);
-        const toggleLines = () => { showLines.value = !showLines.value; };
+        const options = reactive({
+                innerLines: false,
+                outerLines: false,
+                startPoint: false,
+                strokeWidth: .2,
+        });
+        const toggleOuterLines = () => { options.outerLines = !options.outerLines; };
+        const toggleInnerLines = () => { options.innerLines = !options.innerLines; };
 
         let outputSvgText = computed(() => {
             return `<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.value.d}"/>\n</svg>`;
@@ -164,18 +169,18 @@ export default defineComponent({
 
         const locks = reactive({outer: false, inner: false});
 
-        const strokeWidth = ref(.2);
-
         return {
             sp,
             locks,
             data,
-            strokeWidth,
             helpers,
             saveShape,
             applyShape,
-            showLines,
-            toggleLines,
+
+            options,
+
+            toggleOuterLines,
+            toggleInnerLines,
             outputSvgText,
             downloadSvg,
             generate,
@@ -239,7 +244,6 @@ body {
 
         label {
             flex-grow: 1;
-
             display: flex;
             align-items: center;
             font-size: .7rem;
@@ -248,6 +252,10 @@ body {
                 margin: 0 .2rem 0 0;
             }
         }
+
+        // & > input {
+        //     align-self: end;
+        // }
     }
 }
 
@@ -324,7 +332,7 @@ $canvas-bkg: hsl(208, 100%, 95%);
     path {
         fill: none;
         stroke: rgb(7, 85, 105);
-        stroke-width: .2;
+        //stroke-width: .2; // set with vue
     }
 
     .helper-out-lines {
@@ -348,8 +356,9 @@ $small-canvas-cell-size: 64px;
 
 .small-canvas {
     width: $small-canvas-cell-size;
-    .origin {
-        display: none;
+
+    path {
+        stroke-width: .2;
     }
 }
 
