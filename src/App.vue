@@ -82,10 +82,10 @@
                     </div>
 
                     <div class="range-group range-separator">
-                        <Range v-model="options.strokeWidth" min=".01" max="5" step=".01" />
+                        <Range v-model="options.strokeWidth" min=".01" max="2" step=".01" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="options.strokeWidth" min=".01" max="5" step=".01" />
+                        <ValueInput v-model="options.strokeWidth" min=".01" max="2" step=".01" />
                         <div class="range-label">Stroke width</div>
                     </div>
                 </div>
@@ -243,7 +243,7 @@ body {
         display: flex;
 
         label {
-            flex-grow: 1;
+            margin-right: .6em;
             display: flex;
             align-items: center;
             font-size: .7rem;
@@ -253,9 +253,9 @@ body {
             }
         }
 
-        // & > input {
-        //     align-self: end;
-        // }
+        :last-child {
+            margin-left: auto;
+        }
     }
 }
 
@@ -323,6 +323,10 @@ $inputSpacing: 6px;
 }
 
 $canvas-bkg: hsl(208, 100%, 95%);
+
+.big-canvas {
+    max-height: 70vh;
+}
 
 .big-canvas, .small-canvas {
     width: 100%;
