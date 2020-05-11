@@ -39,7 +39,7 @@ export type ShapeNgon = {
     scene: Scene;       // Scene params
 
     //offset: Point2D;
-    sceneSize: Point2D;
+    //sceneSize: Point2D;
     //sceneScale: number;
 
         stroke: number; // Stroke width
@@ -55,11 +55,11 @@ export function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
         lna: p.lenOuter,
         lnb: p.lenInner,
         scn: {
-            w: p.sceneSize.x,
-            h: p.sceneSize.y,
+            w: p.scene.w,
+            h: p.scene.h,
             ...(p.scene.scale !== 1 && { z: p.scene.scale }),
-            ...(p.scene.ofsX !== p.sceneSize.x / 2 && { cx: p.scene.ofsX }),
-            ...(p.scene.ofsY !== p.sceneSize.y / 2 && { cy: p.scene.ofsY }),
+            ...(p.scene.ofsX !== p.scene.w / 2 && { cx: p.scene.ofsX }),
+            ...(p.scene.ofsY !== p.scene.h / 2 && { cy: p.scene.ofsY }),
         },
         ...(p.stroke !== CONST.DEF_STROKE && { stk: p.stroke }),
         ...(p.gen && p.gen !== CONST.NAME_NGON && { gen: p.gen }),
@@ -84,10 +84,6 @@ export function ShapeNgonFromSaved(p: SavedNgon, id?: number): ShapeNgon {
             ofsX: ((p as any).offset && +(p as any).offset.x) || p.scn && p.scn.cx || w / 2,
             ofsY: ((p as any).offset && +(p as any).offset.y) || p.scn && p.scn.cy || h / 2,
         },
-            sceneSize: {
-                x: w,
-                y: h,
-            },
 
         stroke: p.stk || CONST.DEF_STROKE,
         gen: p.gen || CONST.NAME_NGON,
@@ -116,7 +112,6 @@ export const initialParams: ShapeNgon = {
         ofsX: SCENE_SIZE / 2,
         ofsY: SCENE_SIZE / 2,
     },
-        sceneSize: {x: SCENE_SIZE, y: SCENE_SIZE },
         stroke: CONST.DEF_STROKE as number,
 
     id: uniqueId()
@@ -130,7 +125,7 @@ export function fixImportedShape(p: ShapeNgon): ShapeNgon {
     // defaults for missing keys
 //!p.id && (p.id = uniqueId(id));
 //!p.sceneScale && (p.sceneScale = 1);
-    !p.sceneSize && (p.sceneSize = {x: SCENE_SIZE, y: SCENE_SIZE});
+//!p.sceneSize && (p.sceneSize = {x: SCENE_SIZE, y: SCENE_SIZE});
 
     if (p.lenInner) { // conver string to numbers
         p.lenInner.x = +p.lenInner.x;
@@ -172,7 +167,7 @@ export function checkNumbers(p: ShapeNgon): ShapeNgon {
             ofsY: p.scene && +p.scene.ofsY || SCENE_SIZE / 2,
         },
 //            offset: { x: +p.offset.x, y: +p.offset.y },
-            sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
+//            sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
 //            sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
             stroke: +p.stroke,
 
