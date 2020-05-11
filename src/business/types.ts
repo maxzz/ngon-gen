@@ -36,7 +36,7 @@ export type ShapeNgon = {
     lenOuter: Point2D;
     lenInner: Point2D;
 
-        scene?: Scene;
+    scene?: Scene;
 
     offset: Point2D;
     sceneSize: Point2D;
@@ -61,38 +61,43 @@ function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
             ...(p.offset.x !== p.sceneSize.x / 2 && { cx: p.offset.x }),
             ...(p.offset.y !== p.sceneSize.y / 2 && { cy: p.offset.y }),
         },
-        ...(p.stroke !== 1 && { stk: p.stroke }),
-        ...(p.gen && p.gen !== PARAMS_NGON && { gen: p.gen }),
+        ...(p.stroke !== CONST.DEF_STROKE && { stk: p.stroke }),
+        ...(p.gen && p.gen !== CONST.NAME_NGON && { gen: p.gen }),
         id: p.id
     };
     return rv;
 }
 
 function ShapeNgonFrmoSaved(p: SavedNgon, id?: number): ShapeNgon {
+    let w = p.scn.w || SCENE_SIZE;
+    let h = p.scn.h || SCENE_SIZE;
     let rv: ShapeNgon = {
         nOuter: p.na,
         nInner: p.nb,
         lenOuter: p.lna,
         lenInner: p.lnb,
         sceneSize: {
-            x: p.scn.w,
-            y: p.scn.h,
+            x: w,
+            y: h,
         },
         sceneScale: p.scn.z || 1,
         offset: {
-            x: p.scn.cx || p.scn.w / 2,
-            y: p.scn.cy || p.scn.h / 2,
+            x: p.scn.cx || w / 2,
+            y: p.scn.cy || h / 2,
         },
-        stroke: p.stk || DEF_STROKE,
-        gen: p.gen || PARAMS_NGON,
+        stroke: p.stk || CONST.DEF_STROKE,
+        gen: p.gen || CONST.NAME_NGON,
         id: p.id || uniqueId(id),
     };
     return rv;
 }
 
 export const SCENE_SIZE = 14; // should be even integer
-const DEF_STROKE = .2;
-const PARAMS_NGON = 'ngon';
+
+const enum CONST {
+    DEF_STROKE = .2,
+    NAME_NGON = 'ngon',
+};
 
 export const initialParams: ShapeNgon = {
     nOuter: 5,
