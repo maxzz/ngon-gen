@@ -2,7 +2,7 @@
     <div class="app-wrap debug_">
         <div class="main">
             <svg :viewBox="`0 0 ${SCENE_SIZE} ${SCENE_SIZE}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
-                <path :d="data.d" :style="{'stroke-width': options.strokeWidth}" />
+                <path :d="data.d" :style="{'stroke-width': sp.stroke}" />
                 <path v-if="options.outerLines" class="helper-out-lines" :d="helpers.outLines" />
                 <path v-if="options.innerLines" class="helper-inn-lines" :d="helpers.innLines" />
                 <circle v-if="options.outerLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3"></circle>
@@ -82,10 +82,10 @@
                     </div>
 
                     <div class="range-group range-separator">
-                        <Range v-model="options.strokeWidth" min=".01" max="2" step=".01" />
+                        <Range v-model="sp.stroke" min=".01" max="2" step=".01" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="options.strokeWidth" min=".01" max="2" step=".01" />
+                        <ValueInput v-model="sp.stroke" min=".01" max="2" step=".01" />
                         <div class="range-label">Stroke width</div>
                     </div>
                 </div>
@@ -151,7 +151,6 @@ export default defineComponent({
                 innerLines: false,
                 outerLines: false,
                 startPoint: false,
-                strokeWidth: .2,
         });
         const toggleOuterLines = () => { options.outerLines = !options.outerLines; };
         const toggleInnerLines = () => { options.innerLines = !options.innerLines; };

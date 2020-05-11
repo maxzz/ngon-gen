@@ -12,40 +12,40 @@ interface SavedScene { // Persistent format of Scene
 }
 
 interface SavedNgon { // Persistent format of ShapeParams
-    na: number;       // nOuter
-    nb: number;       // nInner
-    lna: Point2D;     // lenOuter
-    lnb: Point2D;     // lenInner
-    stk?: number;     // Stroke width
-    scn: SavedScene;  // Scene params
-    gen?: string;     // Generator name: 'ngon'
-    id?: string;      // Relatively unique shape ID or generated
+    na: number;       // ShapeNgon.nOuter
+    nb: number;       // ShapeNgon.nInner
+    lna: Point2D;     // ShapeNgon.lenOuter
+    lnb: Point2D;     // ShapeNgon.lenInner
+    stk?: number;     //
+    scn: SavedScene;  //
+    gen?: string;     // ShapeNgon.gen
+    id?: string;      // ShapeNgon.id
 }
 
 export type Scene = {
-    ofsX: number;   // center offset X (from top left corner)
-    ofsY: number;   // center offset Y (from top left corner)
-    w: number;      // scene width
-    h: number;      // scene height
-    scale: number;  // scene scale, zoom
+    w: number;        // Scene width
+    h: number;        // Scene height
+    scale: number;    // Scene scale, zoom
+    ofsX: number;     // Center offset X (from top left corner)
+    ofsY: number;     // Center offset Y (from top left corner)
 }
 
 export type ShapeNgon = {
-    nOuter: number;
-    nInner: number;
-    lenOuter: Point2D;
-    lenInner: Point2D;
+    nOuter: number;     // Number of outer points
+    nInner: number;     // Number of inner points
+    lenOuter: Point2D;  // length outer vector
+    lenInner: Point2D;  // length inner vector
 
-    scene?: Scene;
+    scene: Scene;       // Scene params
 
     offset: Point2D;
     sceneSize: Point2D;
     sceneScale: number;
 
-        stroke?: number;
-        gen?: string;
+        stroke: number; // Stroke width
+        gen?: string; // Generator name: 'ngon'
 
-    id: string;
+    id: string;         // Relatively unique shape ID or generated
 }
 
 function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
@@ -76,15 +76,24 @@ function ShapeNgonFrmoSaved(p: SavedNgon, id?: number): ShapeNgon {
         nInner: p.nb,
         lenOuter: p.lna,
         lenInner: p.lnb,
-        sceneSize: {
-            x: w,
-            y: h,
+
+        scene: {
+            w: w,
+            h: h,
+            scale: p.scn.z || 1,
+            ofsX: p.scn.cx || w / 2,
+            ofsY: p.scn.cy || h / 2,
         },
-        sceneScale: p.scn.z || 1,
-        offset: {
-            x: p.scn.cx || w / 2,
-            y: p.scn.cy || h / 2,
-        },
+            sceneSize: {
+                x: w,
+                y: h,
+            },
+            sceneScale: p.scn.z || 1,
+            offset: {
+                x: p.scn.cx || w / 2,
+                y: p.scn.cy || h / 2,
+            },
+
         stroke: p.stk || CONST.DEF_STROKE,
         gen: p.gen || CONST.NAME_NGON,
         id: p.id || uniqueId(id),
@@ -95,7 +104,7 @@ function ShapeNgonFrmoSaved(p: SavedNgon, id?: number): ShapeNgon {
 export const SCENE_SIZE = 14; // should be even integer
 
 const enum CONST {
-    DEF_STROKE = .2,
+    DEF_STROKE = 0.2,
     NAME_NGON = 'ngon',
 };
 
@@ -104,9 +113,19 @@ export const initialParams: ShapeNgon = {
     nInner: 2,
     lenOuter: { x: 2.2, y: 2.2 },
     lenInner: { x: 5.2, y: 5.2 },
-    offset: { x: 7, y: 7 },
-    sceneSize: {x: SCENE_SIZE, y: SCENE_SIZE },
-    sceneScale: 1,
+
+    scene: {
+        w: SCENE_SIZE,
+        h: SCENE_SIZE,
+        scale: 1,
+        ofsX: SCENE_SIZE / 2,
+        ofsY: SCENE_SIZE / 2,
+    },
+        sceneSize: {x: SCENE_SIZE, y: SCENE_SIZE },
+        sceneScale: 1,
+        offset: { x: 7, y: 7 },
+        stroke: CONST.DEF_STROKE as number,
+
     id: uniqueId()
 };
 
@@ -148,9 +167,18 @@ export function checkNumbers(p: ShapeNgon): ShapeNgon {
         nInner: +p.nInner,
         lenOuter: { x: +p.lenOuter.x, y: +p.lenOuter.y },
         lenInner: { x: +p.lenInner.x, y: +p.lenInner.y },
-        offset: { x: +p.offset.x, y: +p.offset.y },
-        sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
-        sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
+        scene: {
+            w: p.scene && +p.scene.w || SCENE_SIZE,
+            h: p.scene && +p.scene.h || SCENE_SIZE,
+            scale: p.scene && +p.scene.scale || 1,
+            ofsX: p.scene && +p.scene.ofsX || SCENE_SIZE / 2,
+            ofsY: p.scene && +p.scene.ofsY || SCENE_SIZE / 2,
+        },
+            offset: { x: +p.offset.x, y: +p.offset.y },
+            sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
+            sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
+            stroke: +p.stroke,
+
         id: p.id
     };
     return rv;

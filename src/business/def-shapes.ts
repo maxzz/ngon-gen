@@ -50,7 +50,8 @@ export const shapeLines = [
     '{"nOuter":8,"nInner":4,"lenOuter":{"x":-4.2,"y":-4.2},"lenInner":{"x":5.2,"y":5.2}}',
     '{"nOuter":6,"nInner":3,"lenOuter":{"x":-8.6,"y":6.2},"lenInner":{"x":5.2,"y":5.2},"sceneScale":0.75}',
     '{"nOuter":3,"nInner":3,"lenOuter":{"x":4.8,"y":4.8},"lenInner":{"x":0.1,"y":0.1},"sceneScale":1.08}',
-    '{"nOuter":70,"nInner":2,"lenOuter":{"x":-11.2,"y":-2.34},"lenInner":{"x":2.3,"y":6.9},"sceneSize":{"x":14,"y":14},"sceneScale":0.58}',
+    '{"nOuter":70,"nInner":2,"lenOuter":{"x":-11.2,"y":-2.34},"lenInner":{"x":2.3,"y":6.9},"sceneScale":0.58}',
+    '{"nOuter":6,"nInner":20,"lenOuter":{"x":-1.9,"y":-1.9},"lenInner":{"x":5.2,"y":-1.9}}',
 ];
 
 // original unsorted
