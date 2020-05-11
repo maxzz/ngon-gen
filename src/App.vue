@@ -74,10 +74,10 @@
                     </div>
 
                     <div class="range-group">
-                        <Range v-model="sp.sceneScale" min=".01" max="4" step=".01" />
+                        <Range v-model="sp.scene.scale" min=".01" max="4" step=".01" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.sceneScale" min=".01" max="4" step=".01" />
+                        <ValueInput v-model="sp.scene.scale" min=".01" max="4" step=".01" />
                         <div class="range-label">Scale</div>
                     </div>
 

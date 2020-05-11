@@ -40,7 +40,7 @@ export type ShapeNgon = {
 
     //offset: Point2D;
     sceneSize: Point2D;
-    sceneScale: number;
+    //sceneScale: number;
 
         stroke: number; // Stroke width
         gen?: string; // Generator name: 'ngon'
@@ -57,7 +57,7 @@ export function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
         scn: {
             w: p.sceneSize.x,
             h: p.sceneSize.y,
-            ...(p.sceneScale !== 1 && { z: p.sceneScale }),
+            ...(p.scene.scale !== 1 && { z: p.scene.scale }),
             ...(p.scene.ofsX !== p.sceneSize.x / 2 && { cx: p.scene.ofsX }),
             ...(p.scene.ofsY !== p.sceneSize.y / 2 && { cy: p.scene.ofsY }),
         },
@@ -88,7 +88,6 @@ export function ShapeNgonFromSaved(p: SavedNgon, id?: number): ShapeNgon {
                 x: w,
                 y: h,
             },
-            sceneScale: ((p as any).sceneScale && +(p as any).sceneScale) || p.scn && p.scn.z || 1,
 
         stroke: p.stk || CONST.DEF_STROKE,
         gen: p.gen || CONST.NAME_NGON,
@@ -118,7 +117,6 @@ export const initialParams: ShapeNgon = {
         ofsY: SCENE_SIZE / 2,
     },
         sceneSize: {x: SCENE_SIZE, y: SCENE_SIZE },
-        sceneScale: 1,
         stroke: CONST.DEF_STROKE as number,
 
     id: uniqueId()
@@ -131,7 +129,7 @@ function uniqueId(v?: number): string {
 export function fixImportedShape(p: ShapeNgon): ShapeNgon {
     // defaults for missing keys
 //!p.id && (p.id = uniqueId(id));
-    !p.sceneScale && (p.sceneScale = 1);
+//!p.sceneScale && (p.sceneScale = 1);
     !p.sceneSize && (p.sceneSize = {x: SCENE_SIZE, y: SCENE_SIZE});
 
     if (p.lenInner) { // conver string to numbers
@@ -175,7 +173,7 @@ export function checkNumbers(p: ShapeNgon): ShapeNgon {
         },
 //            offset: { x: +p.offset.x, y: +p.offset.y },
             sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
-            sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
+//            sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
             stroke: +p.stroke,
 
         id: p.id

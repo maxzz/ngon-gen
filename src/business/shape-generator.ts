@@ -30,7 +30,7 @@ export function generate(params: types.ShapeNgon) {
 
     // scene scale
     points = points.map((_, index) => {
-        return [ _[0] * p.sceneScale, _[1] * p.sceneScale ];
+        return [ _[0] * p.scene.scale, _[1] * p.scene.scale ];
     });
 
     // offset
