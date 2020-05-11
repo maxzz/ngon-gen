@@ -58,18 +58,18 @@
                     </div>
 
                     <div class="range-group range-separator">
-                        <Range v-model="sp.offset.x" min="2" max="20" step=".1" />
+                        <Range v-model="sp.scene.ofsX" min="2" max="20" step=".1" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.offset.x" min="2" max="20" step=".1" />
+                        <ValueInput v-model="sp.scene.ofsX" min="2" max="20" step=".1" />
                         <div class="range-label">Offset X</div>
                     </div>
 
                     <div class="range-group">
-                        <Range v-model="sp.offset.y" min="2" max="20" step=".1" />
+                        <Range v-model="sp.scene.ofsY" min="2" max="20" step=".1" />
                         <div class="range-spacer"></div>
 
-                        <ValueInput v-model="sp.offset.y" min="2" max="20" step=".1" />
+                        <ValueInput v-model="sp.scene.ofsY" min="2" max="20" step=".1" />
                         <div class="range-label">Offset Y</div>
                     </div>
 

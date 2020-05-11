@@ -34,7 +34,7 @@ export function generate(params: types.ShapeNgon) {
     });
 
     // offset
-    points = points.map(_ => [ _[0] + p.offset.x, _[1] + p.offset.y ]);
+    points = points.map(_ => [ _[0] + p.scene.ofsX, _[1] + p.scene.ofsY ]);
 
     // round
     points = points.map(_ => [ rnd2(_[0]), rnd2(_[1])]);

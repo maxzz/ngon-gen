@@ -1,7 +1,7 @@
 import { ref } from '@vue/composition-api';
 import * as types from "./types";
 import { shapeLines as defaultShapes } from './def-shapes';
-import { fixImportedShape } from './types';
+import { fixImportedShape, ShapeNgonFromSaved } from './types';
 
 export function initShapes(sp: types.ShapeNgon) {
     let shapes = ref<types.ShapeNgon[]>([]);
@@ -9,7 +9,7 @@ export function initShapes(sp: types.ShapeNgon) {
     let initSeed = Date.now();
     defaultShapes.forEach((_: string) => {
         try {
-            let newShape = fixImportedShape(JSON.parse(_) as types.ShapeNgon, initSeed++);
+            let newShape = fixImportedShape(ShapeNgonFromSaved(JSON.parse(_) as types.SavedNgon, initSeed++));
             shapes.value.push(newShape);
         } catch (error) {
             console.log(`Bad shape: "${_}"`);

@@ -3,7 +3,7 @@ export type Point2D = {
     y: number;
 }
 
-interface SavedScene { // Persistent format of Scene
+export interface SavedScene { // Persistent format of Scene
     w: number;        // Scene.w
     h: number;        // Scene.h
     z?: number;       // Scene.scale
@@ -11,7 +11,7 @@ interface SavedScene { // Persistent format of Scene
     cy?: number;      // Scene.ofsY
 }
 
-interface SavedNgon { // Persistent format of ShapeParams
+export interface SavedNgon { // Persistent format of ShapeParams
     na: number;       // ShapeNgon.nOuter
     nb: number;       // ShapeNgon.nInner
     lna: Point2D;     // ShapeNgon.lenOuter
@@ -38,7 +38,7 @@ export type ShapeNgon = {
 
     scene: Scene;       // Scene params
 
-    offset: Point2D;
+    //offset: Point2D;
     sceneSize: Point2D;
     sceneScale: number;
 
@@ -48,7 +48,7 @@ export type ShapeNgon = {
     id: string;         // Relatively unique shape ID or generated
 }
 
-function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
+export function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
     let rv: SavedNgon = {
         na: p.nOuter,
         nb: p.nInner,
@@ -58,8 +58,8 @@ function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
             w: p.sceneSize.x,
             h: p.sceneSize.y,
             ...(p.sceneScale !== 1 && { z: p.sceneScale }),
-            ...(p.offset.x !== p.sceneSize.x / 2 && { cx: p.offset.x }),
-            ...(p.offset.y !== p.sceneSize.y / 2 && { cy: p.offset.y }),
+            ...(p.scene.ofsX !== p.sceneSize.x / 2 && { cx: p.scene.ofsX }),
+            ...(p.scene.ofsY !== p.sceneSize.y / 2 && { cy: p.scene.ofsY }),
         },
         ...(p.stroke !== CONST.DEF_STROKE && { stk: p.stroke }),
         ...(p.gen && p.gen !== CONST.NAME_NGON && { gen: p.gen }),
@@ -68,31 +68,27 @@ function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
     return rv;
 }
 
-function ShapeNgonFrmoSaved(p: SavedNgon, id?: number): ShapeNgon {
-    let w = p.scn.w || SCENE_SIZE;
-    let h = p.scn.h || SCENE_SIZE;
+export function ShapeNgonFromSaved(p: SavedNgon, id?: number): ShapeNgon {
+    let w = p.scn && p.scn.w || SCENE_SIZE;
+    let h = p.scn && p.scn.h || SCENE_SIZE;
     let rv: ShapeNgon = {
-        nOuter: p.na,
-        nInner: p.nb,
-        lenOuter: p.lna,
-        lenInner: p.lnb,
+        nOuter: ((p as any).nOuter && +(p as any).nOuter) || p.na,
+        nInner: ((p as any).nInner && +(p as any).nInner) || p.nb,
+        lenOuter: ((p as any).lenOuter && (p as any).lenOuter) || p.lna,
+        lenInner: ((p as any).lenInner && (p as any).lenInner) || p.lnb,
 
         scene: {
             w: w,
             h: h,
-            scale: p.scn.z || 1,
-            ofsX: p.scn.cx || w / 2,
-            ofsY: p.scn.cy || h / 2,
+            scale: ((p as any).sceneScale && +(p as any).sceneScale) || p.scn && p.scn.z || 1,
+            ofsX: ((p as any).offset && +(p as any).offset.x) || p.scn && p.scn.cx || w / 2,
+            ofsY: ((p as any).offset && +(p as any).offset.y) || p.scn && p.scn.cy || h / 2,
         },
             sceneSize: {
                 x: w,
                 y: h,
             },
-            sceneScale: p.scn.z || 1,
-            offset: {
-                x: p.scn.cx || w / 2,
-                y: p.scn.cy || h / 2,
-            },
+            sceneScale: ((p as any).sceneScale && +(p as any).sceneScale) || p.scn && p.scn.z || 1,
 
         stroke: p.stk || CONST.DEF_STROKE,
         gen: p.gen || CONST.NAME_NGON,
@@ -123,7 +119,6 @@ export const initialParams: ShapeNgon = {
     },
         sceneSize: {x: SCENE_SIZE, y: SCENE_SIZE },
         sceneScale: 1,
-        offset: { x: 7, y: 7 },
         stroke: CONST.DEF_STROKE as number,
 
     id: uniqueId()
@@ -133,9 +128,9 @@ function uniqueId(v?: number): string {
     return (v || Date.now()).toString(36); // v is for balk generation within 1ms.
 }
 
-export function fixImportedShape(p: ShapeNgon, id: number): ShapeNgon {
+export function fixImportedShape(p: ShapeNgon): ShapeNgon {
     // defaults for missing keys
-    !p.id && (p.id = uniqueId(id));
+//!p.id && (p.id = uniqueId(id));
     !p.sceneScale && (p.sceneScale = 1);
     !p.sceneSize && (p.sceneSize = {x: SCENE_SIZE, y: SCENE_SIZE});
 
@@ -149,12 +144,16 @@ export function fixImportedShape(p: ShapeNgon, id: number): ShapeNgon {
         p.lenOuter.y = +p.lenOuter.y;
     }
 
-    //console.log('aa');
-    if (p.offset) { // conver string to numbers
-        p.offset.x = +p.offset.x;
-        p.offset.y = +p.offset.y;
+    p.scene.ofsX = +p.scene.ofsX || p.scene.w / 2;
+    p.scene.ofsY = +p.scene.ofsY || p.scene.h / 2;
+
+// temp for old shapes:
+    let ofs: Point2D = (p.scene as any).offset;
+    if (ofs) { // conver string to numbers
+        ofs.x = +ofs.x;
+        ofs.y = +ofs.y;
     } else {
-        p.offset = {x: 7, y: 7};
+        (p as any).offset = {x: 7, y: 7};
     }
 
     return p;
@@ -174,12 +173,16 @@ export function checkNumbers(p: ShapeNgon): ShapeNgon {
             ofsX: p.scene && +p.scene.ofsX || SCENE_SIZE / 2,
             ofsY: p.scene && +p.scene.ofsY || SCENE_SIZE / 2,
         },
-            offset: { x: +p.offset.x, y: +p.offset.y },
+//            offset: { x: +p.offset.x, y: +p.offset.y },
             sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},
             sceneScale: +p.sceneScale || 1, // we need default since it was not stored before
             stroke: +p.stroke,
 
         id: p.id
     };
+
+// temp for old shapes:    
+//    (rv as any).offset = { x: +(p as any).offset.x, y: +(p as any).offset.y };
+
     return rv;
 }
