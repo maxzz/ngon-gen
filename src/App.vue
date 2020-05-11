@@ -125,7 +125,7 @@ import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
-import { SCENE_SIZE, initialParams } from './business/types';
+import { CONST_N, initialParams } from './business/types';
 
 export default defineComponent({
     name: "App",
@@ -180,7 +180,7 @@ export default defineComponent({
             downloadSvg,
             generate,
             shapes,
-            SCENE_SIZE
+            SCENE_SIZE: CONST_N.SCENE_SIZE
         };
     }
 });

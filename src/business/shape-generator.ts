@@ -1,5 +1,5 @@
 import * as types from "./types";
-import { SCENE_SIZE, checkNumbers } from './types';
+import { CONST_N, checkNumbers } from './types';
 
 function ngon(n: number): [number, number][] {
     let polygon = new Array(n);
@@ -52,8 +52,8 @@ export function generate(params: types.ShapeNgon) {
             cy: points[0][1],
         },
         center: {
-            x: SCENE_SIZE / 2,
-            y: SCENE_SIZE / 2,
+            x: CONST_N.SCENE_SIZE / 2,
+            y: CONST_N.SCENE_SIZE / 2,
         }
     };
 }
