@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: '/ngon-gen/'
+    publicPath: process.env.NODE_ENV === 'production' ? '/ngon-gen/' : '/'
 }
