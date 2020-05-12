@@ -265,7 +265,7 @@ $inputSpacing: 6px;
     }
 
     display: grid;
-    grid-template-columns: 1fr 130px 16px 48px;
+    grid-template-columns: 130px 16px 1fr 48px;
     align-items: center;
     gap: 2px;
 
@@ -281,7 +281,7 @@ $inputSpacing: 6px;
     grid-template-rows: 20px;
 
     grid-template-areas:
-        "label-a range-slider lock value-a";
+        "range-slider lock label-a value-a";
     
     .range-label {
         grid-area: label-a;
@@ -297,8 +297,8 @@ $inputSpacing: 6px;
     grid-template-rows: repeat(2, 20px);
     row-gap: $inputSpacing;
     grid-template-areas:
-        "label-a range-slider lock value-a"
-        "label-b range-slider lock value-b";
+        "range-slider lock label-a value-a"
+        "range-slider lock label-b value-b";
 
     & > :first-child {
         grid-area: range-slider;
