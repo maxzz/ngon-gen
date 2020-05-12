@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "predeploy": "yarn build",
+    "delpoy": "gh-pages -d dist"
   },
   "dependencies": {
     "@vue/composition-api": "^0.5.0",
