@@ -1,4 +1,6 @@
-# editors-svg-shapes
+# n-gon SVG generator
+
+![](src/assets/preview-20200512.png)
 
 ## Project setup
 ```
