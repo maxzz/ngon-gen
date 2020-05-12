@@ -265,7 +265,7 @@ $inputSpacing: 6px;
     }
 
     display: grid;
-    grid-template-columns: 130px 16px 48px 1fr;
+    grid-template-columns: 1fr 130px 16px 48px;
     align-items: center;
     gap: 2px;
 
@@ -273,12 +273,19 @@ $inputSpacing: 6px;
     margin-bottom: $inputSpacing;
 
     .range-label {
-        padding-left: .4em;
+        padding-right: .4em;
     }
 }
 
 .range-group {
     grid-template-rows: 20px;
+
+    grid-template-areas:
+        "label-a range-slider lock value-a";
+    
+    .range-label {
+        grid-area: label-a;
+    }
 }
 
 .range-separator {
@@ -290,8 +297,8 @@ $inputSpacing: 6px;
     grid-template-rows: repeat(2, 20px);
     row-gap: $inputSpacing;
     grid-template-areas:
-        "range-slider lock value-a label-a"
-        "range-slider lock value-b label-b";
+        "label-a range-slider lock value-a"
+        "label-b range-slider lock value-b";
 
     & > :first-child {
         grid-area: range-slider;
