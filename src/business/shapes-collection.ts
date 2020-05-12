@@ -16,11 +16,11 @@ export function initShapes(sp: types.ShapeNgon) {
         }
     });
 
-    function saveShape() {
+    function shapeAddToPreview() {
         shapes.value.push(JSON.parse(JSON.stringify(sp)));
     }
 
-    function applyShape(shape: types.ShapeNgon) {
+    function shapeFromPreview(shape: types.ShapeNgon) {
         let upd = JSON.parse(JSON.stringify(shape)) as types.ShapeNgon;
         
         for (let [key, val] of Object.entries(upd)) {
@@ -29,8 +29,8 @@ export function initShapes(sp: types.ShapeNgon) {
     }
 
     return {
-        saveShape,
-        applyShape,
-        shapes
+        shapes,
+        shapeAddToPreview,
+        shapeFromPreview,
     };
 } //initShapes()

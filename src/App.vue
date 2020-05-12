@@ -1,7 +1,7 @@
 <template>
     <div class="app-wrap debug_">
         <div class="main">
-            <svg :viewBox="`0 0 ${SCENE_SIZE} ${SCENE_SIZE}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
+            <svg :viewBox="`0 0 ${sceneSize} ${sceneSize}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="data.d" :style="{'stroke-width': sp.stroke}" />
                 <path v-if="options.outerLines" class="helper-out-lines" :d="helpers.outLines" />
                 <path v-if="options.innerLines" class="helper-inn-lines" :d="helpers.innLines" />
@@ -92,7 +92,7 @@
                 <div class="actions">
                     <label><input type="checkbox" @click="toggleOuterLines">Lines outer</label>
                     <label><input type="checkbox" @click="toggleInnerLines">Lines inner</label>
-                    <input @click="saveShape" type="button" value="Save">
+                    <input @click="shapeAddToPreview" type="button" value="Save">
                 </div>
             </div>
         </div>
@@ -101,7 +101,7 @@
             <input @click="downloadSvg" type="button" value="Download">
         </div>
         <Draggable class="previews" v-model="shapes" @start="drag=true" @end="drag=false">
-            <div v-for="(shape, index) of shapes" :key="shape.id" @click="applyShape(shape)" class="preview">
+            <div v-for="(shape, index) of shapes" :key="shape.id" @click="shapeFromPreview(shape)" class="preview">
                 <div class="preview-id">{{index + 1}}</div>
                 <svg class="small-canvas" viewBox="0 0 14 14">
                     <path :d="generate(shape).d" />
@@ -125,15 +125,15 @@ import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
-import { CONST_N, initialParams } from './business/types';
+import { CONST_N, initialParams, ShapeNgonToSaved } from './business/types';
 
 export default defineComponent({
     name: "App",
     components: { Range, Range2, LockButton, ValueInput, InputRange, LockedPair, Draggable },
     setup() {
         const sp = reactive(initialParams);
-
         let data = computed(() => generate(sp));
+
         let helpers = computed(() => {
             const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${data.value.center.x},${data.value.center.y}L${_[0]},${_[1]}`);
 
@@ -145,7 +145,26 @@ export default defineComponent({
             };
         });
 
-        let { applyShape, saveShape, shapes } = initShapes(sp);
+        const outputSvgText = computed(() => {
+            return `<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.value.d}"/>\n</svg>`;
+        });
+        const downloadSvg = () => download(outputSvgText.value, 'generated.svg', 'text/plain');
+
+        let exportShape = computed(() => {
+            let shape = ShapeNgonToSaved(sp);
+            console.log(shape); //{"na":5,"nb":2,"lna":{"x":2.2,"y":2.2},"lnb":{"x":5.2,"y":5.2},"scn":{"w":14,"h":14},"id":"ka38u7a0"}
+            printShapes();
+            return { shape };
+        });
+
+        function printShapes() {
+            let shapeStrs = shapes.value.map(_ => {
+                let shape = ShapeNgonToSaved(_);
+                return `'${JSON.stringify(shape)}'`;
+            });
+            let s = `[\n  ${shapeStrs.join(',\n  ')},\n]\n`;
+            console.log(s);
+        }
 
         const options = reactive({
                 innerLines: false,
@@ -155,32 +174,34 @@ export default defineComponent({
         const toggleOuterLines = () => { options.outerLines = !options.outerLines; };
         const toggleInnerLines = () => { options.innerLines = !options.innerLines; };
 
-        let outputSvgText = computed(() => {
-            return `<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.value.d}"/>\n</svg>`;
+        const locks = reactive({
+            outer: false, 
+            inner: false
         });
-        function downloadSvg() {
-            download(outputSvgText.value, 'generated.svg', 'text/plain');
-        }
 
-        const locks = reactive({outer: false, inner: false});
+        let { shapes, shapeAddToPreview, shapeFromPreview } = initShapes(sp);
 
         return {
             sp,
-            locks,
             data,
             helpers,
-            saveShape,
-            applyShape,
+            outputSvgText,
+            exportShape,
+
+            shapes,
+            shapeAddToPreview,
+            shapeFromPreview,
 
             options,
+            locks,
 
             toggleOuterLines,
             toggleInnerLines,
-            outputSvgText,
+            
             downloadSvg,
             generate,
-            shapes,
-            SCENE_SIZE: CONST_N.SCENE_SIZE
+            
+            sceneSize: CONST_N.SCENE_SIZE
         };
     }
 });
