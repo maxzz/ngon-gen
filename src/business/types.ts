@@ -61,16 +61,16 @@ export function ShapeNgonToSaved(p: ShapeNgon): SavedNgon {
             ...(p.scene.ofsX !== p.scene.w / 2 && { cx: p.scene.ofsX }),
             ...(p.scene.ofsY !== p.scene.h / 2 && { cy: p.scene.ofsY }),
         },
-        ...(p.stroke !== CONST_N.DEF_STROKE && { stk: p.stroke }),
-        ...(p.gen && p.gen !== CONST.NAME_NGON && { gen: p.gen }),
+        ...(p.stroke !== CONST.defStroke && { stk: p.stroke }),
+        ...(p.gen && p.gen !== CONST_NAMES.NAME_NGON && { gen: p.gen }),
         id: p.id
     };
     return rv;
 }
 
 export function ShapeNgonFromSaved(p: SavedNgon, id?: number): ShapeNgon {
-    let w = p.scn && p.scn.w || CONST_N.SCENE_SIZE;
-    let h = p.scn && p.scn.h || CONST_N.SCENE_SIZE;
+    let w = p.scn && p.scn.w || CONST.sceneSize;
+    let h = p.scn && p.scn.h || CONST.sceneSize;
     let rv: ShapeNgon = {
         nOuter: ((p as any).nOuter && +(p as any).nOuter) || p.na,
         nInner: ((p as any).nInner && +(p as any).nInner) || p.nb,
@@ -85,20 +85,20 @@ export function ShapeNgonFromSaved(p: SavedNgon, id?: number): ShapeNgon {
             ofsY: ((p as any).offset && +(p as any).offset.y) || p.scn && p.scn.cy || h / 2,
         },
 
-        stroke: p.stk || CONST_N.DEF_STROKE,
-        gen: p.gen || CONST.NAME_NGON,
+        stroke: p.stk || CONST.defStroke,
+        gen: p.gen || CONST_NAMES.NAME_NGON,
         id: p.id || uniqueId(id),
     };
     return rv;
 }
 
-const enum CONST {
+const enum CONST_NAMES {
     NAME_NGON = 'ngon',
 };
 
-export const enum CONST_N { // ts defines type by last enum
-    DEF_STROKE = 0.2,
-    SCENE_SIZE = 14, // should be an even integer
+export const enum CONST { // ts defines type by last enum
+    defStroke = 0.2,
+    sceneSize = 14, // should be an even integer
 };
 
 export const initialParams: ShapeNgon = {
@@ -108,18 +108,18 @@ export const initialParams: ShapeNgon = {
     lenInner: { x: 5.2, y: 5.2 },
 
     scene: {
-        w: CONST_N.SCENE_SIZE,
-        h: CONST_N.SCENE_SIZE,
+        w: CONST.sceneSize,
+        h: CONST.sceneSize,
         scale: 1,
-        ofsX: CONST_N.SCENE_SIZE / 2,
-        ofsY: CONST_N.SCENE_SIZE / 2,
+        ofsX: CONST.sceneSize / 2,
+        ofsY: CONST.sceneSize / 2,
     },
-        stroke: CONST_N.DEF_STROKE,
+        stroke: CONST.defStroke,
 
     id: uniqueId()
 };
 
-function uniqueId(v?: number): string {
+export function uniqueId(v?: number): string {
     return (v || Date.now()).toString(36); // v is for balk generation within 1ms.
 }
 
@@ -127,7 +127,7 @@ export function fixImportedShape(p: ShapeNgon): ShapeNgon {
     // defaults for missing keys
 //!p.id && (p.id = uniqueId(id));
 //!p.sceneScale && (p.sceneScale = 1);
-//!p.sceneSize && (p.sceneSize = {x: CONST_N.SCENE_SIZE, y: CONST_N.SCENE_SIZE});
+//!p.sceneSize && (p.sceneSize = {x: CONST.sceneSize, y: CONST.sceneSize});
 
     if (p.lenInner) { // conver string to numbers
         p.lenInner.x = +p.lenInner.x;
@@ -162,11 +162,11 @@ export function checkNumbers(p: ShapeNgon): ShapeNgon {
         lenOuter: { x: +p.lenOuter.x, y: +p.lenOuter.y },
         lenInner: { x: +p.lenInner.x, y: +p.lenInner.y },
         scene: {
-            w: p.scene && +p.scene.w || CONST_N.SCENE_SIZE,
-            h: p.scene && +p.scene.h || CONST_N.SCENE_SIZE,
+            w: p.scene && +p.scene.w || CONST.sceneSize,
+            h: p.scene && +p.scene.h || CONST.sceneSize,
             scale: p.scene && +p.scene.scale || 1,
-            ofsX: p.scene && +p.scene.ofsX || CONST_N.SCENE_SIZE / 2,
-            ofsY: p.scene && +p.scene.ofsY || CONST_N.SCENE_SIZE / 2,
+            ofsX: p.scene && +p.scene.ofsX || CONST.sceneSize / 2,
+            ofsY: p.scene && +p.scene.ofsY || CONST.sceneSize / 2,
         },
 //            offset: { x: +p.offset.x, y: +p.offset.y },
 //            sceneSize: {x: p.sceneSize.x, y: p.sceneSize.y},

@@ -2,10 +2,10 @@
     <div class="app-wrap debug_">
         <div class="main">
             <svg :viewBox="`0 0 ${sceneSize} ${sceneSize}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
-                <path :d="data.d" :style="{'stroke-width': sp.stroke}" />
+                <path :d="genData.d" :style="{'stroke-width': sp.stroke}" />
                 <path v-if="options.outerLines" class="helper-out-lines" :d="helpers.outLines" />
                 <path v-if="options.innerLines" class="helper-inn-lines" :d="helpers.innLines" />
-                <circle v-if="options.outerLines" class="origin" :cx="data.start.cx" :cy="data.start.cy" r=".3"></circle>
+                <circle v-if="options.outerLines" class="origin" :cx="genData.start.cx" :cy="genData.start.cy" r=".3"></circle>
             </svg>
             <div class="right debug-grid-16_">
                 <div class="ranges">
@@ -104,7 +104,7 @@
             <div v-for="(shape, index) of shapes" :key="shape.id" @click="shapeFromPreview(shape)" class="preview">
                 <div class="preview-id">{{index + 1}}</div>
                 <svg class="small-canvas" viewBox="0 0 14 14">
-                    <path :d="generate(shape).d" />
+                    <path :d="generate(shape).d" :style="{'stroke-width': shape.stroke}" />
                 </svg>
             </div>
         </Draggable>
@@ -116,7 +116,7 @@ import Vue from "vue";
 import { ref, reactive, computed, defineComponent } from '@vue/composition-api';
 import * as types from "./business/types";
 import { generate } from './business/shape-generator';
-import { initShapes } from './business/shapes-collection';
+import { initShapes, generatedSvg } from './business/shapes-collection';
 import download from 'downloadjs';
 import Range from './components/Range.vue';
 import Range2 from './components/Range2.vue';
@@ -125,20 +125,20 @@ import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
-import { CONST_N, initialParams, ShapeNgonToSaved } from './business/types';
+import { CONST, initialParams, ShapeNgonToSaved } from './business/types';
 
 export default defineComponent({
     name: "App",
     components: { Range, Range2, LockButton, ValueInput, InputRange, LockedPair, Draggable },
     setup() {
         const sp = reactive(initialParams);
-        let data = computed(() => generate(sp));
+        let genData = computed(() => generate(sp));
 
         let helpers = computed(() => {
-            const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${data.value.center.x},${data.value.center.y}L${_[0]},${_[1]}`);
+            const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${genData.value.center.x},${genData.value.center.y}L${_[0]},${_[1]}`);
 
-            let innLines = pointsToLines(data.value.points.filter((_, index) => index % sp.nInner !== 0));
-            let outLines = pointsToLines(data.value.points.filter((_, index) => index % sp.nInner === 0));
+            let innLines = pointsToLines(genData.value.points.filter((_, index) => index % sp.nInner !== 0));
+            let outLines = pointsToLines(genData.value.points.filter((_, index) => index % sp.nInner === 0));
             return {
                 innLines,
                 outLines
@@ -146,25 +146,9 @@ export default defineComponent({
         });
 
         const outputSvgText = computed(() => {
-            return `<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${data.value.d}"/>\n</svg>`;
+            return generatedSvg(genData.value.d, sp.stroke);
         });
         const downloadSvg = () => download(outputSvgText.value, 'generated.svg', 'text/plain');
-
-        let exportShape = computed(() => {
-            let shape = ShapeNgonToSaved(sp);
-            console.log(shape); //{"na":5,"nb":2,"lna":{"x":2.2,"y":2.2},"lnb":{"x":5.2,"y":5.2},"scn":{"w":14,"h":14},"id":"ka38u7a0"}
-            printShapes();
-            return { shape };
-        });
-
-        function printShapes() {
-            let shapeStrs = shapes.value.map(_ => {
-                let shape = ShapeNgonToSaved(_);
-                return `'${JSON.stringify(shape)}'`;
-            });
-            let s = `[\n  ${shapeStrs.join(',\n  ')},\n]\n`;
-            console.log(s);
-        }
 
         const options = reactive({
                 innerLines: false,
@@ -179,14 +163,14 @@ export default defineComponent({
             inner: false
         });
 
-        let { shapes, shapeAddToPreview, shapeFromPreview } = initShapes(sp);
+        let { shapes, shapeAddToPreview, shapeFromPreview, _DebugExport } = initShapes(sp);
 
         return {
             sp,
-            data,
+            genData,
             helpers,
             outputSvgText,
-            exportShape,
+            _DebugExport,
 
             shapes,
             shapeAddToPreview,
@@ -201,7 +185,7 @@ export default defineComponent({
             downloadSvg,
             generate,
             
-            sceneSize: CONST_N.SCENE_SIZE
+            sceneSize: CONST.sceneSize
         };
     }
 });

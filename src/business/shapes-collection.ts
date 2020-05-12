@@ -1,7 +1,7 @@
-import { ref } from '@vue/composition-api';
+import { ref, computed } from '@vue/composition-api';
 import * as types from "./types";
 import { shapeLines as defaultShapes } from './def-shapes';
-import { fixImportedShape, ShapeNgonFromSaved } from './types';
+import { fixImportedShape, ShapeNgonFromSaved, ShapeNgonToSaved, uniqueId } from './types';
 
 export function initShapes(sp: types.ShapeNgon) {
     let shapes = ref<types.ShapeNgon[]>([]);
@@ -17,7 +17,9 @@ export function initShapes(sp: types.ShapeNgon) {
     });
 
     function shapeAddToPreview() {
-        shapes.value.push(JSON.parse(JSON.stringify(sp)));
+        let newShape = JSON.parse(JSON.stringify(sp));
+        newShape.id = types.uniqueId();
+        shapes.value.push(newShape);
     }
 
     function shapeFromPreview(shape: types.ShapeNgon) {
@@ -28,9 +30,34 @@ export function initShapes(sp: types.ShapeNgon) {
         }
     }
 
+    let _DebugExport = computed(() => {
+        function printShapes() {
+            let shapeStrs = shapes.value.map((_, index) => {
+                let shape = ShapeNgonToSaved(_);
+                return `/*${index < 9 ? '0': ''}${index+1}*/ '${JSON.stringify(shape)}'`;
+            });
+            let s = `[\n  ${shapeStrs.join(',\n  ')},\n]\n`;
+            console.log(s);
+        }
+        printShapes();
+
+        let newShape = ShapeNgonToSaved(sp);
+        let oldId = newShape.id;
+        newShape.id = uniqueId();
+        let s = `/*${shapes.value.length}*/'${JSON.stringify(newShape)}', //prev "id": ${oldId}`;
+        console.log(s);
+        return s;
+    });
+
     return {
         shapes,
         shapeAddToPreview,
         shapeFromPreview,
+        _DebugExport,
     };
 } //initShapes()
+
+export function generatedSvg(path: string, stroke: number) {
+    let style = `<style> path { stroke-width: ${stroke}; fill: none; stroke: red; } </style>`;
+    return `<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">\n    <path d="${path}"/>\n    ${style}\n</svg>`;
+}
