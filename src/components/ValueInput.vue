@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { defineComponent } from '@vue/composition-api';
-import { rnd2 } from '@/business/shape-generator';
+import { rnd2 } from '@/business/types';
 
 export default defineComponent({
     props: {

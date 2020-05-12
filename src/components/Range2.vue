@@ -9,7 +9,7 @@
 import Vue from "vue";
 import { defineComponent, Ref, watch  } from '@vue/composition-api';
 import Range from './Range.vue';
-import { rnd2 } from '../business/shape-generator';
+import { rnd2 } from '@/business/types';
 
 export default defineComponent({
     inheritAttrs: false,

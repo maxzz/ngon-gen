@@ -12,7 +12,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ref } from '@vue/composition-api';
-import { rnd2 } from '../business/shape-generator';
+import { rnd2 } from "./../business/types";
 
 export default Vue.extend({
     inheritAttrs: false,

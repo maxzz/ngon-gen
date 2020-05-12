@@ -1,5 +1,5 @@
 import { ref, computed } from '@vue/composition-api';
-import { ShapeNgon, ShapeNgonFromSaved, ShapeNgonToSaved, uniqueId } from './types';
+import { SavedNgon, ShapeNgon, ShapeNgonFromSaved, ShapeNgonToSaved, uniqueId } from './types';
 import { defaultShapes } from './def-shapes';
 
 export function previewShapes(sp: ShapeNgon) {
@@ -8,7 +8,7 @@ export function previewShapes(sp: ShapeNgon) {
     let initSeed = Date.now();
     defaultShapes.forEach((_: string) => {
         try {
-            let newShape = ShapeNgonFromSaved(JSON.parse(_) as types.SavedNgon, initSeed++);
+            let newShape = ShapeNgonFromSaved(JSON.parse(_) as SavedNgon, initSeed++);
             previews.value.push(newShape);
         } catch (error) {
             console.log(`Bad shape: "${_}"`);

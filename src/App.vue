@@ -115,20 +115,18 @@
 import Vue from "vue";
 import { ref, reactive, computed, defineComponent } from '@vue/composition-api';
 import { CONST, bootupParams, ShapeNgonToSaved } from './business/types';
-import { generate } from './business/shape-generator';
 import { previewShapes, generatedSvg } from './business/shapes-collection';
-import download from 'downloadjs';
+import { generate } from './business/generator-ngon';
 import Range from './components/Range.vue';
 import Range2 from './components/Range2.vue';
 import ValueInput from './components/ValueInput.vue';
-import InputRange from './components/InputRange.vue';
-import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
+import download from 'downloadjs';
 
 export default defineComponent({
     name: "App",
-    components: { Range, Range2, LockButton, ValueInput, InputRange, LockedPair, Draggable },
+    components: { Range, Range2, LockButton, ValueInput, Draggable },
     setup() {
         const sp = reactive(bootupParams);
         let genData = computed(() => generate(sp));

@@ -1,4 +1,4 @@
-import { ShapeNgon, CONST } from "./types";
+import { ShapeNgon, CONST, rnd2 } from "./types";
 
 function ngon(n: number): [number, number][] {
     let polygon = new Array(n);
@@ -8,10 +8,6 @@ function ngon(n: number): [number, number][] {
         polygon[i] = [Math.cos(radians), Math.sin(radians)];
     }
     return polygon;
-}
-
-export function rnd2(n: number): number {
-    return Math.round(n * 100) / 100;
 }
 
 export function generate(params: ShapeNgon) {

@@ -54,6 +54,10 @@ export function uniqueId(v?: number): string {
     return (v || Date.now()).toString(36); // v is for balk generation within 1ms.
 }
 
+export function rnd2(n: number): number {
+    return Math.round(n * 100) / 100;
+}
+
 export const bootupParams: ShapeNgon = {
     nOuter: 5,
     nInner: 2,
