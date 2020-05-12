@@ -1,16 +1,15 @@
 import { ref, computed } from '@vue/composition-api';
-import * as types from "./types";
-import { shapeLines as defaultShapes } from './def-shapes';
-import { fixImportedShape, ShapeNgonFromSaved, ShapeNgonToSaved, uniqueId } from './types';
+import { ShapeNgon, ShapeNgonFromSaved, ShapeNgonToSaved, uniqueId } from './types';
+import { defaultShapes } from './def-shapes';
 
-export function initShapes(sp: types.ShapeNgon) {
-    let shapes = ref<types.ShapeNgon[]>([]);
+export function previewShapes(sp: ShapeNgon) {
+    let previews = ref<ShapeNgon[]>([]);
 
     let initSeed = Date.now();
     defaultShapes.forEach((_: string) => {
         try {
-            let newShape = fixImportedShape(ShapeNgonFromSaved(JSON.parse(_) as types.SavedNgon, initSeed++));
-            shapes.value.push(newShape);
+            let newShape = ShapeNgonFromSaved(JSON.parse(_) as types.SavedNgon, initSeed++);
+            previews.value.push(newShape);
         } catch (error) {
             console.log(`Bad shape: "${_}"`);
         }
@@ -18,21 +17,21 @@ export function initShapes(sp: types.ShapeNgon) {
 
     function shapeAddToPreview() {
         let newShape = JSON.parse(JSON.stringify(sp));
-        newShape.id = types.uniqueId();
-        shapes.value.push(newShape);
+        newShape.id = uniqueId();
+        previews.value.push(newShape);
     }
 
-    function shapeFromPreview(shape: types.ShapeNgon) {
-        let upd = JSON.parse(JSON.stringify(shape)) as types.ShapeNgon;
+    function shapeFromPreview(shape: ShapeNgon) {
+        let upd = JSON.parse(JSON.stringify(shape)) as ShapeNgon;
         
         for (let [key, val] of Object.entries(upd)) {
-            (sp as any)[key] = val;
+            (sp as any)[key] = val; // add reactive keys separately
         }
     }
 
     let _DebugExport = computed(() => {
         function printShapes() {
-            let shapeStrs = shapes.value.map((_, index) => {
+            let shapeStrs = previews.value.map((_, index) => {
                 let shape = ShapeNgonToSaved(_);
                 return `/*${index < 9 ? '0': ''}${index+1}*/ '${JSON.stringify(shape)}'`;
             });
@@ -44,18 +43,18 @@ export function initShapes(sp: types.ShapeNgon) {
         let newShape = ShapeNgonToSaved(sp);
         let oldId = newShape.id;
         newShape.id = uniqueId();
-        let s = `/*${shapes.value.length}*/'${JSON.stringify(newShape)}', //prev "id": ${oldId}`;
+        let s = `/*${previews.value.length}*/'${JSON.stringify(newShape)}', //prev "id": ${oldId}`;
         console.log(s);
         return s;
     });
 
     return {
-        shapes,
+        previews,
         shapeAddToPreview,
         shapeFromPreview,
         _DebugExport,
     };
-} //initShapes()
+} //previewShapes()
 
 export function generatedSvg(path: string, stroke: number) {
     let style = `<style> path { stroke-width: ${stroke}; fill: none; stroke: red; } </style>`;

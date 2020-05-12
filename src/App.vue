@@ -1,13 +1,13 @@
 <template>
-    <div class="app-wrap debug_">
+    <div class="app-wrap"> <!-- debug -->
         <div class="main">
             <svg :viewBox="`0 0 ${sceneSize} ${sceneSize}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="genData.d" :style="{'stroke-width': sp.stroke}" />
-                <path v-if="options.outerLines" class="helper-out-lines" :d="helpers.outLines" />
-                <path v-if="options.innerLines" class="helper-inn-lines" :d="helpers.innLines" />
+                <path v-if="options.outerLines" class="helper-out-lines" :d="hintLines.outer" />
+                <path v-if="options.innerLines" class="helper-inn-lines" :d="hintLines.inner" />
                 <circle v-if="options.outerLines" class="origin" :cx="genData.start.cx" :cy="genData.start.cy" r=".3"></circle>
             </svg>
-            <div class="right debug-grid-16_">
+            <div class="right"> <!-- debug-grid-16 --> 
                 <div class="ranges">
                     <div class="range-group">
                         <Range v-model="sp.nOuter" min="2" max="70" />
@@ -30,9 +30,9 @@
                             :x='{label: "Outer len x", min: "-20", max: "20", value: sp.lenOuter.x,  step: ".1" }'
                             :y='{label: "Outer len y", min: "-20", max: "20", value: sp.lenOuter.y,  step: ".1" }'
                             v-model="sp.lenOuter"
-                            :locked="locks.outer"
+                            :locked="lockedValues.outer"
                         />
-                        <LockButton v-model="locks.outer" class="range-lock"/>
+                        <LockButton v-model="lockedValues.outer" class="range-lock"/>
 
                         <ValueInput v-model="sp.lenOuter.x" min="-20" max="20" step=".1" />
                         <div class="range-label">Outer len x</div>
@@ -46,9 +46,9 @@
                             :x='{label: "Inner len x", min: "-20", max: "20", value: sp.lenInner.x,  step: ".1" }'
                             :y='{label: "Inner len y", min: "-20", max: "20", value: sp.lenInner.y,  step: ".1" }'
                             v-model="sp.lenInner"
-                            :locked="locks.inner"
+                            :locked="lockedValues.inner"
                         />
-                        <LockButton v-model="locks.inner" class="range-lock"/>
+                        <LockButton v-model="lockedValues.inner" class="range-lock"/>
 
                         <ValueInput v-model="sp.lenInner.x" min="-20" max="20" step=".1" />
                         <div class="range-label">Inner len x</div>
@@ -92,16 +92,16 @@
                 <div class="actions">
                     <label><input type="checkbox" @click="toggleOuterLines">Lines outer</label>
                     <label><input type="checkbox" @click="toggleInnerLines">Lines inner</label>
-                    <input @click="shapeAddToPreview" type="button" value="Save">
+                    <input @click="shapeAddToPreview" type="button" value="Keep" title="Add shape parameters to the predefined panel">
                 </div>
             </div>
         </div>
         <div class="output">
             <textarea cols="30" rows="7" :value='outputSvgText'></textarea>
-            <input @click="downloadSvg" type="button" value="Download">
+            <input @click="downloadSvg" type="button" value="Download" title="Download SVG file to downloads location">
         </div>
-        <Draggable class="previews" v-model="shapes" @start="drag=true" @end="drag=false">
-            <div v-for="(shape, index) of shapes" :key="shape.id" @click="shapeFromPreview(shape)" class="preview">
+        <Draggable class="previews" v-model="previews" @start="drag=true" @end="drag=false">
+            <div v-for="(shape, index) of previews" :key="shape.id" @click="shapeFromPreview(shape)" class="preview">
                 <div class="preview-id">{{index + 1}}</div>
                 <svg class="small-canvas" viewBox="0 0 14 14">
                     <path :d="generate(shape).d" :style="{'stroke-width': shape.stroke}" />
@@ -114,9 +114,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { ref, reactive, computed, defineComponent } from '@vue/composition-api';
-import * as types from "./business/types";
+import { CONST, bootupParams, ShapeNgonToSaved } from './business/types';
 import { generate } from './business/shape-generator';
-import { initShapes, generatedSvg } from './business/shapes-collection';
+import { previewShapes, generatedSvg } from './business/shapes-collection';
 import download from 'downloadjs';
 import Range from './components/Range.vue';
 import Range2 from './components/Range2.vue';
@@ -125,23 +125,22 @@ import InputRange from './components/InputRange.vue';
 import LockedPair from './components/LockedPair.vue';
 import LockButton from './components/LockButton.vue';
 import Draggable from 'vuedraggable';
-import { CONST, initialParams, ShapeNgonToSaved } from './business/types';
 
 export default defineComponent({
     name: "App",
     components: { Range, Range2, LockButton, ValueInput, InputRange, LockedPair, Draggable },
     setup() {
-        const sp = reactive(initialParams);
+        const sp = reactive(bootupParams);
         let genData = computed(() => generate(sp));
 
-        let helpers = computed(() => {
+        let hintLines = computed(() => {
             const pointsToLines = (arr: [number, number][]) => arr.map(_ => `M${genData.value.center.x},${genData.value.center.y}L${_[0]},${_[1]}`);
 
-            let innLines = pointsToLines(genData.value.points.filter((_, index) => index % sp.nInner !== 0));
-            let outLines = pointsToLines(genData.value.points.filter((_, index) => index % sp.nInner === 0));
+            let inner = pointsToLines(genData.value.points.filter((_, index) => index % sp.nInner !== 0));
+            let outer = pointsToLines(genData.value.points.filter((_, index) => index % sp.nInner === 0));
             return {
-                innLines,
-                outLines
+                inner,
+                outer
             };
         });
 
@@ -158,26 +157,26 @@ export default defineComponent({
         const toggleOuterLines = () => { options.outerLines = !options.outerLines; };
         const toggleInnerLines = () => { options.innerLines = !options.innerLines; };
 
-        const locks = reactive({
+        const lockedValues = reactive({
             outer: false, 
             inner: false
         });
 
-        let { shapes, shapeAddToPreview, shapeFromPreview, _DebugExport } = initShapes(sp);
+        let { previews, shapeAddToPreview, shapeFromPreview, _DebugExport } = previewShapes(sp);
 
         return {
             sp,
             genData,
-            helpers,
+            hintLines,
             outputSvgText,
             _DebugExport,
 
-            shapes,
+            previews,
             shapeAddToPreview,
             shapeFromPreview,
 
             options,
-            locks,
+            lockedValues,
 
             toggleOuterLines,
             toggleInnerLines,

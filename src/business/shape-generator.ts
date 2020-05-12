@@ -1,5 +1,4 @@
-import * as types from "./types";
-import { CONST, checkNumbers } from './types';
+import { ShapeNgon, CONST } from "./types";
 
 function ngon(n: number): [number, number][] {
     let polygon = new Array(n);
@@ -15,8 +14,8 @@ export function rnd2(n: number): number {
     return Math.round(n * 100) / 100;
 }
 
-export function generate(params: types.ShapeNgon) {
-    const p: types.ShapeNgon = checkNumbers(params);
+export function generate(params: ShapeNgon) {
+    const p: ShapeNgon = params;
 
     // generate points
     let points = ngon(p.nOuter * p.nInner);

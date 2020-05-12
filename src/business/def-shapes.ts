@@ -1,5 +1,4 @@
-// sorted with IDs
-export const shapeLines = [
+export const defaultShapes = [
   /*01*/ '{"na":3,"nb":2,"lna":{"x":2.2,"y":2.2},"lnb":{"x":5.2,"y":5.2},"scn":{"w":14,"h":14},"id":"ka39jp2e"}',
   /*02*/ '{"na":3,"nb":2,"lna":{"x":7.2,"y":0.2},"lnb":{"x":3.2,"y":4.2},"scn":{"w":14,"h":14},"id":"ka39jp2f"}',
   /*03*/ '{"na":5,"nb":2,"lna":{"x":6.2,"y":4.2},"lnb":{"x":5.2,"y":5.2},"scn":{"w":14,"h":14},"id":"ka39jp2g"}',
