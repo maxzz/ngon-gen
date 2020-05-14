@@ -43,7 +43,7 @@ export type ShapeNgon = {
 
 export const enum CONST { // ts defines type by last enum
     defStroke = 0.2,
-    sceneSize = 14, // should be an even integer
+    sceneSize = 24, // should be an even integer
 }
 
 const enum CONST_NAMES {

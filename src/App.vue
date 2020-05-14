@@ -1,7 +1,7 @@
 <template>
     <div class="app-wrap"> <!-- debug -->
         <div class="main">
-            <svg :viewBox="`0 0 ${sceneSize} ${sceneSize}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
+            <svg :viewBox="`0 0 ${sp.scene.w} ${sp.scene.h}`" class="big-canvas" xmlns="http://www.w3.org/2000/svg">
                 <path :d="genData.d" :style="{'stroke-width': sp.stroke}" />
                 <path v-if="options.outerLines" class="helper-out-lines" :d="hintLines.outer" />
                 <path v-if="options.innerLines" class="helper-inn-lines" :d="hintLines.inner" />
@@ -89,6 +89,13 @@
                         <div class="range-label">Stroke width</div>
                     </div>
                 </div>
+                <div class="scene-size">
+                    <div class="scene-size-label">SVG size</div>
+                    <ValueInput v-model="sp.scene.w" min="14" max="200" step="10" />
+                    <div class="scene-size-label">x</div>
+                    <ValueInput v-model="sp.scene.h" min="14" max="200" step="10" />
+                </div>
+
                 <div class="actions">
                     <label><input type="checkbox" @click="toggleOuterLines">Lines outer</label>
                     <label><input type="checkbox" @click="toggleInnerLines">Lines inner</label>
@@ -103,7 +110,7 @@
         <Draggable class="previews" v-model="previews" @start="drag=true" @end="drag=false">
             <div v-for="(shape, index) of previews" :key="shape.id" @click="shapeFromPreview(shape)" class="preview">
                 <div class="preview-id">{{index + 1}}</div>
-                <svg class="small-canvas" viewBox="0 0 14 14">
+                <svg class="small-canvas" :viewBox="`0 0 ${shape.scene.w} ${shape.scene.h}`">
                     <path :d="generate(shape).d" :style="{'stroke-width': shape.stroke}" />
                 </svg>
             </div>
@@ -114,7 +121,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ref, reactive, computed, defineComponent } from '@vue/composition-api';
-import { CONST, bootupParams, ShapeNgonToSaved } from './business/types';
+import { bootupParams, ShapeNgonToSaved } from './business/types';
 import { previewShapes, generatedSvg } from './business/shapes-collection';
 import { generate } from './business/generator-ngon';
 import Range from './components/Range.vue';
@@ -143,7 +150,7 @@ export default defineComponent({
         });
 
         const outputSvgText = computed(() => {
-            return generatedSvg(genData.value.d, sp.stroke);
+            return generatedSvg(genData.value.d, sp.scene.w, sp.scene.h, sp.stroke);
         });
         const downloadSvg = () => download(outputSvgText.value, 'generated.svg', 'text/plain');
 
@@ -181,8 +188,6 @@ export default defineComponent({
             
             downloadSvg,
             generate,
-            
-            sceneSize: CONST.sceneSize
         };
     }
 });
@@ -323,6 +328,23 @@ $inputSpacing: 6px;
 
     :nth-child(6) {
         grid-area: label-b;
+    }
+}
+
+.scene-size {
+    display: grid;
+    grid-template-columns: auto 3em 1em 3em;
+    padding-bottom: .4em;
+
+    .scene-size-label {
+        font-size: .7em;
+        justify-self: center;
+        align-self: center;
+    }
+
+    :first-child {
+        padding-right: .5em;
+        justify-self: end;
     }
 }
 

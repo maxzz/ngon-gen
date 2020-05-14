@@ -1,4 +1,4 @@
-import { ShapeNgon, CONST, rnd2 } from "./types";
+import { ShapeNgon, rnd2 } from "./types";
 
 function ngon(n: number): [number, number][] {
     let polygon = new Array(n);
@@ -47,8 +47,8 @@ export function generate(params: ShapeNgon) {
             cy: points[0][1],
         },
         center: {
-            x: CONST.sceneSize / 2,
-            y: CONST.sceneSize / 2,
+            x: params.scene.w / 2,
+            y: params.scene.h / 2,
         }
     };
 }
