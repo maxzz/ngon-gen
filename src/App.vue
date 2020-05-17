@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <div class="scene-size">
-                    <div class="scene-size-label">SVG size</div>
+                    <div class="scene-size-label">viewBox size</div>
                     <ValueInput v-model="sp.scene.w" min="14" max="200" step="10" />
                     <div class="scene-size-label">x</div>
                     <ValueInput v-model="sp.scene.h" min="14" max="200" step="10" />
@@ -109,6 +109,7 @@
         </div>
         <Draggable class="previews" v-model="previews" @start="drag=true" @end="drag=false">
             <div v-for="(shape, index) of previews" :key="shape.id" @click="shapeFromPreview(shape)" class="preview">
+                <div class="preview-close" @click="shapeRemove(shape)">&times;</div>
                 <div class="preview-id">{{index + 1}}</div>
                 <svg class="small-canvas" :viewBox="`0 0 ${shape.scene.w} ${shape.scene.h}`">
                     <path :d="generate(shape).d" :style="{'stroke-width': shape.stroke}" />
@@ -167,18 +168,20 @@ export default defineComponent({
             inner: false
         });
 
-        let { previews, shapeAddToPreview, shapeFromPreview, _DebugExport } = previewShapes(sp);
+        //let { previews, shapeAddToPreview, shapeFromPreview, shapeRemove, _DebugExport } = previewShapes(sp);
 
         return {
             sp,
             genData,
             hintLines,
             outputSvgText,
-            _DebugExport,
 
-            previews,
-            shapeAddToPreview,
-            shapeFromPreview,
+            // previews,
+            // shapeAddToPreview,
+            // shapeFromPreview,
+            // shapeRemove,
+            // _DebugExport,
+            ...previewShapes(sp),
 
             options,
             lockedValues,
@@ -385,7 +388,7 @@ $canvas-bkg: hsl(208, 100%, 95%);
 $small-canvas-cell-size: 64px;
 
 .small-canvas {
-    width: $small-canvas-cell-size;
+    //min-width: $small-canvas-cell-size;
 
     path {
         stroke-width: .2;
@@ -398,6 +401,43 @@ $small-canvas-cell-size: 64px;
 
     .preview {
         position: relative;
+        cursor: pointer;
+
+        // &:hover:before {
+        //     content: '\274C';
+        //     position: absolute;
+        //     color: white;
+        //     background-color: red;
+        //     font-size: .8em;
+        //     z-index: 2;
+
+        //     // bottom: .2em;
+        //     // right: 6px;
+        //     top: .2em;
+        //     right: 6px;
+
+        //     cursor: pointer;
+        //     pointer-events: all;
+
+        //     // width: 100%;
+        //     // height: 100%;
+        // }
+    }
+
+    .preview-close {
+        position: absolute;
+        top: .2em;
+        right: 6px;
+        width: 1em;
+        height: 1em;
+        text-align: center;
+        color: white;
+        background-color: red;
+        display: none;
+    }
+
+    .preview:hover .preview-close {
+        display: block;
     }
 
     .preview-id {

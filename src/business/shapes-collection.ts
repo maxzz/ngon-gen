@@ -29,6 +29,10 @@ export function previewShapes(sp: ShapeNgon) {
         }
     }
 
+    function shapeRemove(shape: ShapeNgon) {
+        previews.value = previews.value.filter((_) => _ !== shape);
+    }
+
     let _DebugExport = computed(() => {
         function printShapes() {
             let shapeStrs = previews.value.map((_, index) => {
@@ -52,6 +56,7 @@ export function previewShapes(sp: ShapeNgon) {
         previews,
         shapeAddToPreview,
         shapeFromPreview,
+        shapeRemove,
         _DebugExport,
     };
 } //previewShapes()
