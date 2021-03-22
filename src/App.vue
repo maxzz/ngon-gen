@@ -107,7 +107,7 @@
             <textarea cols="30" rows="7" :value='outputSvgText'></textarea>
             <input @click="downloadSvg" type="button" value="Download" title="Download SVG file to downloads location">
         </div>
-        <Draggable class="previews" v-model="previews" @start="drag=true" @end="drag=false">
+        <Draggable class="previews" v-model="previews">
             <div v-for="(shape, index) of previews" :key="shape.id" @click="shapeFromPreview(shape)" class="preview">
                 <div class="preview-close" @click.stop="shapeRemove(shape)">&times;</div>
                 <div class="preview-id">{{index + 1}}</div>
